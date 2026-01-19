@@ -159,3 +159,10 @@ TanStack Router with file-based routing:
 - Drizzle ORM for type-safe database operations
 - Better-Auth handles all authentication flows
 - Devtools available in development (Router, Query, and unified TanStack Devtools)
+
+## Active Technologies
+- TypeScript 5.7, React 19.2.0 + TanStack Start, TanStack Router 1.132, TanStack Query 5.66, Better-Auth 1.4 (001-data-model)
+- PostgreSQL via Drizzle ORM 0.45 (001-data-model)
+
+## Recent Changes
+- 001-data-model: Added TypeScript 5.7, React 19.2.0 + TanStack Start, TanStack Router 1.132, TanStack Query 5.66, Better-Auth 1.4
