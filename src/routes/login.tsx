@@ -1,10 +1,23 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { authClient } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
 });
+
+interface Config {
+  registrationEnabled: boolean;
+}
+
+async function fetchConfig(): Promise<Config> {
+  const response = await fetch("/api/config");
+  if (!response.ok) {
+    return { registrationEnabled: true };
+  }
+  return response.json();
+}
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -16,11 +29,25 @@ function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const { data: config } = useQuery({
+    queryKey: ["config"],
+    queryFn: fetchConfig,
+    staleTime: Infinity,
+  });
+
+  const registrationEnabled = config?.registrationEnabled ?? true;
+
   useEffect(() => {
     if (session?.user) {
       navigate({ to: "/dashboard" });
     }
   }, [session, navigate]);
+
+  useEffect(() => {
+    if (!registrationEnabled && isSignUp) {
+      setIsSignUp(false);
+    }
+  }, [registrationEnabled, isSignUp]);
 
   if (isPending) {
     return (
@@ -181,18 +208,24 @@ function LoginPage() {
         </button>
 
         <div className="mt-4 text-center">
-          <button
-            type="button"
-            onClick={() => {
-              setIsSignUp(!isSignUp);
-              setError("");
-            }}
-            className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
-          >
-            {isSignUp
-              ? "Already have an account? Sign in"
-              : "Don't have an account? Sign up"}
-          </button>
+          {registrationEnabled ? (
+            <button
+              type="button"
+              onClick={() => {
+                setIsSignUp(!isSignUp);
+                setError("");
+              }}
+              className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+            >
+              {isSignUp
+                ? "Already have an account? Sign in"
+                : "Don't have an account? Sign up"}
+            </button>
+          ) : (
+            <p className="text-sm text-neutral-500 dark:text-neutral-400">
+              Registration is currently closed. Contact an administrator for access.
+            </p>
+          )}
         </div>
       </div>
     </div>

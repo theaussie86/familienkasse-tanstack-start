@@ -7,6 +7,7 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import Header from '../components/Header'
+import { ErrorBoundary } from '../components/ErrorBoundary'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 
@@ -51,7 +52,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <Header />
-        {children}
+        <ErrorBoundary>
+          {children}
+        </ErrorBoundary>
         <TanStackDevtools
           config={{
             position: 'bottom-right',

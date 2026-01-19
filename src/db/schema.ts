@@ -1,4 +1,11 @@
-import { pgTable, text, timestamp, boolean, index } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  text,
+  timestamp,
+  boolean,
+  integer,
+  index,
+} from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -73,3 +80,46 @@ export const verification = pgTable(
   },
   (table) => [index("verification_identifier_idx").on(table.identifier)]
 );
+
+// Familienkasse tables
+export const familienkasseAccount = pgTable(
+  "familienkasse_account",
+  {
+    id: text("id").primaryKey(),
+    name: text("name").notNull(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [index("familienkasse_account_userId_idx").on(table.userId)]
+);
+
+export const familienkasseTransaction = pgTable(
+  "familienkasse_transaction",
+  {
+    id: text("id").primaryKey(),
+    accountId: text("account_id")
+      .notNull()
+      .references(() => familienkasseAccount.id, { onDelete: "cascade" }),
+    description: text("description"),
+    amount: integer("amount").notNull(),
+    isPaid: boolean("is_paid").default(false).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("familienkasse_transaction_accountId_idx").on(table.accountId),
+  ]
+);
+
+// Type exports for Familienkasse entities
+export type FamilienkasseAccount = typeof familienkasseAccount.$inferSelect;
+export type NewFamilienkasseAccount = typeof familienkasseAccount.$inferInsert;
+export type FamilienkasseTransaction =
+  typeof familienkasseTransaction.$inferSelect;
+export type NewFamilienkasseTransaction =
+  typeof familienkasseTransaction.$inferInsert;

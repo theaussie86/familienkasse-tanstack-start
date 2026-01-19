@@ -44,22 +44,49 @@ A family finance tracking application built with TanStack Start. This applicatio
 ```
 /src
   /routes               - TanStack Router file-based routes
-    __root.tsx         - Root layout with devtools
+    __root.tsx         - Root layout with devtools and ErrorBoundary
     index.tsx          - Home page
     login.tsx          - Login page
-    dashboard.tsx      - Protected dashboard
-    /api/auth/$.ts     - Better-Auth catch-all API route
+    dashboard.tsx      - Protected dashboard with account management
+    /accounts
+      [accountId].tsx  - Account detail page with transactions
+    /api
+      /auth/$.ts       - Better-Auth catch-all API route
+      config.ts        - Public config API (registration status)
+      /accounts        - REST API for accounts
+        index.ts       - GET/POST accounts
+        /[accountId]
+          index.ts     - GET/PATCH/DELETE account
+          /transactions
+            index.ts   - GET/POST transactions
+            [transactionId].ts - GET/PATCH/DELETE transaction
   /components          - React components
     Header.tsx         - Main header component
+    AccountCard.tsx    - Account display with balance
+    AccountList.tsx    - Account list with loading states
+    TransactionForm.tsx - Transaction creation form
+    TransactionList.tsx - Transaction list display
+    TransactionRow.tsx  - Transaction row with actions
+    CreateAccountForm.tsx - Account creation form
+    EditAccountDialog.tsx - Account edit modal
+    DeleteAccountDialog.tsx - Account delete confirmation
+    ErrorBoundary.tsx  - Error boundary wrapper
     /ui                - shadcn/ui components
   /db                  - Database layer
     index.ts           - Drizzle client setup
-    schema.ts          - Database schema (user, session, account, verification)
+    schema.ts          - Database schema
+    /queries           - Database query functions
+      accounts.ts      - Account CRUD operations
+      transactions.ts  - Transaction CRUD operations
   /lib                 - Utility libraries
-    auth.ts            - Better-Auth server config
+    auth.ts            - Better-Auth server config with registration control
     auth-client.ts     - Better-Auth client
     middleware.ts      - Auth middleware
     utils.ts           - Utility functions (cn)
+    currency.ts        - Currency formatting (cents to Euro)
+    id.ts              - UUID generation
+    api-error.ts       - API error response helpers
+    validations.ts     - Zod validation schemas
   /integrations
     /tanstack-query    - Query provider and devtools
     /better-auth       - Auth UI components
@@ -67,6 +94,7 @@ A family finance tracking application built with TanStack Start. This applicatio
   router.tsx           - Router configuration
   routeTree.gen.ts     - Generated route tree (auto-generated)
 /drizzle               - Migration files
+/specs                 - Feature specifications (speckit)
 /public                - Static assets
 ```
 
@@ -79,11 +107,22 @@ A family finance tracking application built with TanStack Start. This applicatio
 
 ## Database Schema
 
-The database schema (in `src/db/schema.ts`) includes Better-Auth tables:
+The database schema (in `src/db/schema.ts`) includes:
+
+### Better-Auth tables:
 - **user** - User profiles (id, name, email, emailVerified, image)
 - **session** - User sessions with expiration
 - **account** - OAuth accounts and credentials
 - **verification** - Email verification tokens
+
+### Familienkasse tables:
+- **familienkasse_account** - Family accounts (id, name, user_id, created_at, updated_at)
+- **familienkasse_transaction** - Transactions (id, account_id, description, amount, is_paid, created_at)
+
+### Amount Storage
+- Amounts are stored as integers representing cents (e.g., €10.50 = 1050)
+- Use `formatCurrency()` from `@/lib/currency` for display
+- Use `parseToCents()` for converting user input to cents
 
 ## Development Commands
 
@@ -116,7 +155,13 @@ npm run db:studio    # Open Drizzle Studio
 DATABASE_URL=postgresql://...
 GOOGLE_CLIENT_ID=...
 GOOGLE_CLIENT_SECRET=...
+ALLOW_REGISTRATION=true  # Set to 'false' to disable new user registration
 ```
+
+### Registration Control
+- Set `ALLOW_REGISTRATION=false` to block new sign-ups
+- When disabled, the sign-up endpoint returns 404 and UI shows "Registration is closed"
+- Configured via Better-Auth `disabledPaths` in `src/lib/auth.ts`
 
 ## Routing
 
@@ -134,6 +179,15 @@ TanStack Router with file-based routing:
 - Server middleware for route protection
 - TanStack Query for data fetching with SSR hydration
 - Better-Auth hooks for session state
+- Loading skeletons for data-fetching components
+- Modal dialogs for edit/delete confirmations
+
+### API Patterns
+- REST API routes use `createAPIFileRoute` from `@tanstack/react-start/api`
+- Authentication via `auth.api.getSession({ headers: getRequestHeaders() })`
+- All endpoints return typed JSON responses using `jsonResponse()` from `@/lib/api-error`
+- Data isolation: all queries filter by `userId` from session
+- Validation using Zod schemas from `@/lib/validations`
 
 ### File Naming
 - Components: PascalCase (e.g., `Header.tsx`)
