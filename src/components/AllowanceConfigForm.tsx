@@ -30,10 +30,13 @@ export function AllowanceConfigForm({
   };
 
   const handleAmountChange = (value: string) => {
+    // Normalize comma to period for decimal separator (German locale support)
+    const normalizedValue = value.replace(",", ".");
+
     // Allow only valid decimal inputs
-    if (value === "" || /^\d*\.?\d{0,2}$/.test(value)) {
-      setAmountInput(value);
-      const cents = Math.round(parseFloat(value || "0") * 100);
+    if (normalizedValue === "" || /^\d*\.?\d{0,2}$/.test(normalizedValue)) {
+      setAmountInput(normalizedValue);
+      const cents = Math.round(parseFloat(normalizedValue || "0") * 100);
       onChange({
         recurringAllowanceEnabled: enabled,
         recurringAllowanceAmount: cents >= 0 ? cents : 0,

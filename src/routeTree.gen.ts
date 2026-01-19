@@ -12,8 +12,14 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AccountsAccountIdRouteImport } from './routes/accounts/[accountId]'
+import { Route as ApiConfigRouteImport } from './routes/api/config'
+import { Route as AccountsAccountIdRouteImport } from './routes/accounts/$accountId'
+import { Route as ApiAccountsIndexRouteImport } from './routes/api/accounts/index'
+import { Route as ApiCronWeeklyAllowanceRouteImport } from './routes/api/cron/weekly-allowance'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ApiAccountsAccountIdIndexRouteImport } from './routes/api/accounts/$accountId/index'
+import { Route as ApiAccountsAccountIdTransactionsIndexRouteImport } from './routes/api/accounts/$accountId/transactions/index'
+import { Route as ApiAccountsAccountIdTransactionsTransactionIdRouteImport } from './routes/api/accounts/$accountId/transactions/$transactionId'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -30,9 +36,24 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiConfigRoute = ApiConfigRouteImport.update({
+  id: '/api/config',
+  path: '/api/config',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccountsAccountIdRoute = AccountsAccountIdRouteImport.update({
-  id: '/accounts/accountId',
-  path: '/accounts/accountId',
+  id: '/accounts/$accountId',
+  path: '/accounts/$accountId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAccountsIndexRoute = ApiAccountsIndexRouteImport.update({
+  id: '/api/accounts/',
+  path: '/api/accounts/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCronWeeklyAllowanceRoute = ApiCronWeeklyAllowanceRouteImport.update({
+  id: '/api/cron/weekly-allowance',
+  path: '/api/cron/weekly-allowance',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -40,28 +61,64 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAccountsAccountIdIndexRoute =
+  ApiAccountsAccountIdIndexRouteImport.update({
+    id: '/api/accounts/$accountId/',
+    path: '/api/accounts/$accountId/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiAccountsAccountIdTransactionsIndexRoute =
+  ApiAccountsAccountIdTransactionsIndexRouteImport.update({
+    id: '/api/accounts/$accountId/transactions/',
+    path: '/api/accounts/$accountId/transactions/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiAccountsAccountIdTransactionsTransactionIdRoute =
+  ApiAccountsAccountIdTransactionsTransactionIdRouteImport.update({
+    id: '/api/accounts/$accountId/transactions/$transactionId',
+    path: '/api/accounts/$accountId/transactions/$transactionId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
-  '/accounts/accountId': typeof AccountsAccountIdRoute
+  '/accounts/$accountId': typeof AccountsAccountIdRoute
+  '/api/config': typeof ApiConfigRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/cron/weekly-allowance': typeof ApiCronWeeklyAllowanceRoute
+  '/api/accounts/': typeof ApiAccountsIndexRoute
+  '/api/accounts/$accountId/': typeof ApiAccountsAccountIdIndexRoute
+  '/api/accounts/$accountId/transactions/$transactionId': typeof ApiAccountsAccountIdTransactionsTransactionIdRoute
+  '/api/accounts/$accountId/transactions/': typeof ApiAccountsAccountIdTransactionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
-  '/accounts/accountId': typeof AccountsAccountIdRoute
+  '/accounts/$accountId': typeof AccountsAccountIdRoute
+  '/api/config': typeof ApiConfigRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/cron/weekly-allowance': typeof ApiCronWeeklyAllowanceRoute
+  '/api/accounts': typeof ApiAccountsIndexRoute
+  '/api/accounts/$accountId': typeof ApiAccountsAccountIdIndexRoute
+  '/api/accounts/$accountId/transactions/$transactionId': typeof ApiAccountsAccountIdTransactionsTransactionIdRoute
+  '/api/accounts/$accountId/transactions': typeof ApiAccountsAccountIdTransactionsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
-  '/accounts/accountId': typeof AccountsAccountIdRoute
+  '/accounts/$accountId': typeof AccountsAccountIdRoute
+  '/api/config': typeof ApiConfigRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/cron/weekly-allowance': typeof ApiCronWeeklyAllowanceRoute
+  '/api/accounts/': typeof ApiAccountsIndexRoute
+  '/api/accounts/$accountId/': typeof ApiAccountsAccountIdIndexRoute
+  '/api/accounts/$accountId/transactions/$transactionId': typeof ApiAccountsAccountIdTransactionsTransactionIdRoute
+  '/api/accounts/$accountId/transactions/': typeof ApiAccountsAccountIdTransactionsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -69,17 +126,40 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/login'
-    | '/accounts/accountId'
+    | '/accounts/$accountId'
+    | '/api/config'
     | '/api/auth/$'
+    | '/api/cron/weekly-allowance'
+    | '/api/accounts/'
+    | '/api/accounts/$accountId/'
+    | '/api/accounts/$accountId/transactions/$transactionId'
+    | '/api/accounts/$accountId/transactions/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/login' | '/accounts/accountId' | '/api/auth/$'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/login'
+    | '/accounts/$accountId'
+    | '/api/config'
+    | '/api/auth/$'
+    | '/api/cron/weekly-allowance'
+    | '/api/accounts'
+    | '/api/accounts/$accountId'
+    | '/api/accounts/$accountId/transactions/$transactionId'
+    | '/api/accounts/$accountId/transactions'
   id:
     | '__root__'
     | '/'
     | '/dashboard'
     | '/login'
-    | '/accounts/accountId'
+    | '/accounts/$accountId'
+    | '/api/config'
     | '/api/auth/$'
+    | '/api/cron/weekly-allowance'
+    | '/api/accounts/'
+    | '/api/accounts/$accountId/'
+    | '/api/accounts/$accountId/transactions/$transactionId'
+    | '/api/accounts/$accountId/transactions/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -87,7 +167,13 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
   AccountsAccountIdRoute: typeof AccountsAccountIdRoute
+  ApiConfigRoute: typeof ApiConfigRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiCronWeeklyAllowanceRoute: typeof ApiCronWeeklyAllowanceRoute
+  ApiAccountsIndexRoute: typeof ApiAccountsIndexRoute
+  ApiAccountsAccountIdIndexRoute: typeof ApiAccountsAccountIdIndexRoute
+  ApiAccountsAccountIdTransactionsTransactionIdRoute: typeof ApiAccountsAccountIdTransactionsTransactionIdRoute
+  ApiAccountsAccountIdTransactionsIndexRoute: typeof ApiAccountsAccountIdTransactionsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -113,11 +199,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/accounts/accountId': {
-      id: '/accounts/accountId'
-      path: '/accounts/accountId'
-      fullPath: '/accounts/accountId'
+    '/api/config': {
+      id: '/api/config'
+      path: '/api/config'
+      fullPath: '/api/config'
+      preLoaderRoute: typeof ApiConfigRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accounts/$accountId': {
+      id: '/accounts/$accountId'
+      path: '/accounts/$accountId'
+      fullPath: '/accounts/$accountId'
       preLoaderRoute: typeof AccountsAccountIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/accounts/': {
+      id: '/api/accounts/'
+      path: '/api/accounts'
+      fullPath: '/api/accounts/'
+      preLoaderRoute: typeof ApiAccountsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/cron/weekly-allowance': {
+      id: '/api/cron/weekly-allowance'
+      path: '/api/cron/weekly-allowance'
+      fullPath: '/api/cron/weekly-allowance'
+      preLoaderRoute: typeof ApiCronWeeklyAllowanceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
@@ -125,6 +232,27 @@ declare module '@tanstack/react-router' {
       path: '/api/auth/$'
       fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/accounts/$accountId/': {
+      id: '/api/accounts/$accountId/'
+      path: '/api/accounts/$accountId'
+      fullPath: '/api/accounts/$accountId/'
+      preLoaderRoute: typeof ApiAccountsAccountIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/accounts/$accountId/transactions/': {
+      id: '/api/accounts/$accountId/transactions/'
+      path: '/api/accounts/$accountId/transactions'
+      fullPath: '/api/accounts/$accountId/transactions/'
+      preLoaderRoute: typeof ApiAccountsAccountIdTransactionsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/accounts/$accountId/transactions/$transactionId': {
+      id: '/api/accounts/$accountId/transactions/$transactionId'
+      path: '/api/accounts/$accountId/transactions/$transactionId'
+      fullPath: '/api/accounts/$accountId/transactions/$transactionId'
+      preLoaderRoute: typeof ApiAccountsAccountIdTransactionsTransactionIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -135,7 +263,15 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
   AccountsAccountIdRoute: AccountsAccountIdRoute,
+  ApiConfigRoute: ApiConfigRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiCronWeeklyAllowanceRoute: ApiCronWeeklyAllowanceRoute,
+  ApiAccountsIndexRoute: ApiAccountsIndexRoute,
+  ApiAccountsAccountIdIndexRoute: ApiAccountsAccountIdIndexRoute,
+  ApiAccountsAccountIdTransactionsTransactionIdRoute:
+    ApiAccountsAccountIdTransactionsTransactionIdRoute,
+  ApiAccountsAccountIdTransactionsIndexRoute:
+    ApiAccountsAccountIdTransactionsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

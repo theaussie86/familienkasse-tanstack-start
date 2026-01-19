@@ -1,11 +1,15 @@
-import { createAPIFileRoute } from "@tanstack/react-start/api";
+import { createFileRoute } from "@tanstack/react-router";
 import { isRegistrationAllowed } from "@/lib/auth";
 
-export const APIRoute = createAPIFileRoute("/api/config")({
-  // GET /api/config - Get public configuration
-  GET: async () => {
-    return Response.json({
-      registrationEnabled: isRegistrationAllowed(),
-    });
+export const Route = createFileRoute("/api/config")({
+  server: {
+    handlers: {
+      // GET /api/config - Get public configuration
+      GET: async () => {
+        return Response.json({
+          registrationEnabled: isRegistrationAllowed(),
+        });
+      },
+    },
   },
 });

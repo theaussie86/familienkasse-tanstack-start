@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { TransactionForm } from "@/components/TransactionForm";
 import { TransactionList } from "@/components/TransactionList";
 
-export const Route = createFileRoute("/accounts/accountId")({
+export const Route = createFileRoute("/accounts/$accountId")({
   component: AccountDetail,
   server: {
     middleware: [authMiddleware],
