@@ -21,14 +21,14 @@ function LoginPage() {
 
   if (isPending) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-[calc(100vh-3.5rem)]">
         <Spinner className="h-6 w-6" />
       </div>
     );
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen px-4">
+    <div className="flex justify-center items-center min-h-[calc(100vh-3.5rem)] px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle>Familienkasse</CardTitle>
