@@ -46,21 +46,21 @@ export function badRequest(message: string): Response {
 /**
  * Create a 401 Unauthorized error response.
  */
-export function unauthorized(message = "Authentication required"): Response {
+export function unauthorized(message = "Authentifizierung erforderlich"): Response {
   return createApiError("UNAUTHORIZED", message);
 }
 
 /**
  * Create a 403 Forbidden error response.
  */
-export function forbidden(message = "Access denied"): Response {
+export function forbidden(message = "Zugriff verweigert"): Response {
   return createApiError("FORBIDDEN", message);
 }
 
 /**
  * Create a 404 Not Found error response.
  */
-export function notFound(message = "Resource not found"): Response {
+export function notFound(message = "Ressource nicht gefunden"): Response {
   return createApiError("NOT_FOUND", message);
 }
 
@@ -68,7 +68,7 @@ export function notFound(message = "Resource not found"): Response {
  * Create a 500 Internal Server Error response.
  */
 export function internalError(
-  message = "An unexpected error occurred"
+  message = "Ein unerwarteter Fehler ist aufgetreten"
 ): Response {
   return createApiError("INTERNAL_ERROR", message);
 }

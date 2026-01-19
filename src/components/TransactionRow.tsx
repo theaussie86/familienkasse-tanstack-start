@@ -77,7 +77,7 @@ export function TransactionRow({
                 className={cn(badgeStyle.className, "cursor-pointer", isUpdating && "opacity-50")}
                 onClick={handleTogglePaid}
               >
-                {transaction.isPaid ? "Paid" : "Unpaid"}
+                {transaction.isPaid ? "Bezahlt" : "Offen"}
               </Badge>
             </div>
             {transaction.description && (
@@ -92,7 +92,7 @@ export function TransactionRow({
             size="icon"
             onClick={() => onDeleteRequest?.(transaction)}
             className="hover:text-destructive"
-            title="Delete transaction"
+            title="Transaktion löschen"
           >
             <Trash2 className="h-4 w-4" />
           </Button>

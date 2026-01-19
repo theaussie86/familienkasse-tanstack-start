@@ -23,7 +23,7 @@ export const Route = createFileRoute("/dashboard")({
 async function fetchAccounts(): Promise<AccountWithBalance[]> {
   const response = await fetch("/api/accounts");
   if (!response.ok) {
-    throw new Error("Failed to fetch accounts");
+    throw new Error("Konten konnten nicht geladen werden");
   }
   return response.json();
 }
@@ -70,16 +70,16 @@ function Dashboard() {
             Familienkasse
           </h1>
           <p className="text-sm text-muted-foreground">
-            Welcome back, {session?.user?.name || "User"}
+            Willkommen zurück, {session?.user?.name || "Benutzer"}
           </p>
         </div>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-medium">Accounts</h2>
+            <h2 className="text-lg font-medium">Konten</h2>
             {!showCreateForm && (
               <Button onClick={() => setShowCreateForm(true)}>
-                New Account
+                Neues Konto
               </Button>
             )}
           </div>
@@ -87,7 +87,7 @@ function Dashboard() {
           {showCreateForm && (
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm">Create New Account</CardTitle>
+                <CardTitle className="text-sm">Neues Konto erstellen</CardTitle>
               </CardHeader>
               <CardContent>
                 <CreateAccountForm
@@ -102,7 +102,7 @@ function Dashboard() {
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                Failed to load accounts. Please try again.
+                Konten konnten nicht geladen werden. Bitte versuche es erneut.
               </AlertDescription>
             </Alert>
           ) : (

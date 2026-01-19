@@ -24,7 +24,7 @@ export function CreateAccountForm({
     setError(null);
 
     if (!name.trim()) {
-      setError("Name is required");
+      setError("Name ist erforderlich");
       return;
     }
 
@@ -39,13 +39,13 @@ export function CreateAccountForm({
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || "Failed to create account");
+        throw new Error(data.message || "Konto konnte nicht erstellt werden");
       }
 
       setName("");
       onSuccess();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      setError(err instanceof Error ? err.message : "Ein Fehler ist aufgetreten");
     } finally {
       setIsSubmitting(false);
     }
@@ -61,13 +61,13 @@ export function CreateAccountForm({
       )}
 
       <div className="grid gap-2">
-        <Label htmlFor="name">Account Name *</Label>
+        <Label htmlFor="name">Kontoname *</Label>
         <Input
           id="name"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="e.g., Max's Account"
+          placeholder="z.B. Max' Konto"
           maxLength={100}
           required
         />
@@ -78,15 +78,15 @@ export function CreateAccountForm({
           {isSubmitting ? (
             <>
               <Spinner className="mr-2" />
-              Creating...
+              Wird erstellt...
             </>
           ) : (
-            "Create Account"
+            "Konto erstellen"
           )}
         </Button>
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel}>
-            Cancel
+            Abbrechen
           </Button>
         )}
       </div>

@@ -31,20 +31,20 @@ export function DeleteTransactionDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete Transaction?</AlertDialogTitle>
+          <AlertDialogTitle>Transaktion löschen?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently delete the transaction
+            Diese Transaktion
             {transaction && (
               <span className="font-medium">
                 {" "}
-                of {formatCurrency(transaction.amount)}
+                über {formatCurrency(transaction.amount)}
               </span>
-            )}
-            . This action cannot be undone.
+            )}{" "}
+            wird unwiderruflich gelöscht.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isDeleting}>Abbrechen</AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
             disabled={isDeleting}
@@ -53,10 +53,10 @@ export function DeleteTransactionDialog({
             {isDeleting ? (
               <>
                 <Spinner className="mr-2" />
-                Deleting...
+                Wird gelöscht...
               </>
             ) : (
-              "Delete"
+              "Löschen"
             )}
           </AlertDialogAction>
         </AlertDialogFooter>

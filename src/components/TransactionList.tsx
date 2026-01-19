@@ -68,7 +68,7 @@ export function TransactionList({
       <Card className="border-dashed">
         <CardContent className="p-8 text-center">
           <p className="text-muted-foreground">
-            No transactions yet. Add your first transaction to get started.
+            Noch keine Transaktionen vorhanden. Füge deine erste Transaktion hinzu, um loszulegen.
           </p>
         </CardContent>
       </Card>

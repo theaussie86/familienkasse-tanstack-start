@@ -34,7 +34,7 @@ export const Route = createFileRoute(
           const transaction = await getTransaction(transactionId, session.user.id);
 
           if (!transaction) {
-            return notFound("Transaction not found");
+            return notFound("Transaktion nicht gefunden");
           }
 
           return jsonResponse(transaction);
@@ -59,7 +59,7 @@ export const Route = createFileRoute(
           const parsed = updateTransactionSchema.safeParse(body);
 
           if (!parsed.success) {
-            return badRequest(parsed.error.errors[0]?.message || "Invalid input");
+            return badRequest(parsed.error.errors[0]?.message || "Ungültige Eingabe");
           }
 
           const transaction = await updateTransaction(
@@ -69,7 +69,7 @@ export const Route = createFileRoute(
           );
 
           if (!transaction) {
-            return notFound("Transaction not found");
+            return notFound("Transaktion nicht gefunden");
           }
 
           return jsonResponse(transaction);
@@ -93,7 +93,7 @@ export const Route = createFileRoute(
           const deleted = await deleteTransaction(transactionId, session.user.id);
 
           if (!deleted) {
-            return notFound("Transaction not found");
+            return notFound("Transaktion nicht gefunden");
           }
 
           return new Response(null, { status: 204 });

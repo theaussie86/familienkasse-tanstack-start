@@ -27,7 +27,7 @@ export default function BetterAuthHeader() {
           size="sm"
           onClick={() => authClient.signOut()}
         >
-          Sign out
+          Abmelden
         </Button>
       </div>
     )
@@ -35,7 +35,7 @@ export default function BetterAuthHeader() {
 
   return (
     <Button variant="outline" size="sm" asChild>
-      <Link to="/login">Sign in</Link>
+      <Link to="/login">Anmelden</Link>
     </Button>
   )
 }

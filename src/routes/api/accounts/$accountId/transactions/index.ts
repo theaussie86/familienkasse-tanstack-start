@@ -42,7 +42,7 @@ export const Route = createFileRoute(
           );
 
           if (!result) {
-            return notFound("Account not found");
+            return notFound("Konto nicht gefunden");
           }
 
           return jsonResponse(result);
@@ -67,7 +67,7 @@ export const Route = createFileRoute(
           const parsed = createTransactionSchema.safeParse(body);
 
           if (!parsed.success) {
-            return badRequest(parsed.error.errors[0]?.message || "Invalid input");
+            return badRequest(parsed.error.errors[0]?.message || "Ungültige Eingabe");
           }
 
           const transaction = await createTransaction(session.user.id, {
@@ -76,7 +76,7 @@ export const Route = createFileRoute(
           });
 
           if (!transaction) {
-            return notFound("Account not found");
+            return notFound("Konto nicht gefunden");
           }
 
           return jsonResponse(transaction, 201);

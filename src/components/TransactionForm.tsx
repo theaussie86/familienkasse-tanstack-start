@@ -30,7 +30,7 @@ export function TransactionForm({
 
     const amount = parseToCents(amountStr);
     if (amount === null) {
-      setError("Please enter a valid amount");
+      setError("Bitte gib einen gültigen Betrag ein");
       return;
     }
 
@@ -49,7 +49,7 @@ export function TransactionForm({
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || "Failed to create transaction");
+        throw new Error(data.message || "Transaktion konnte nicht erstellt werden");
       }
 
       setDescription("");
@@ -57,7 +57,7 @@ export function TransactionForm({
       setIsPaid(false);
       onSuccess();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      setError(err instanceof Error ? err.message : "Ein Fehler ist aufgetreten");
     } finally {
       setIsSubmitting(false);
     }
@@ -73,29 +73,29 @@ export function TransactionForm({
       )}
 
       <div className="grid gap-2">
-        <Label htmlFor="amount">Amount (*)</Label>
+        <Label htmlFor="amount">Betrag (*)</Label>
         <Input
           id="amount"
           type="text"
           inputMode="decimal"
           value={amountStr}
           onChange={(e) => setAmountStr(e.target.value)}
-          placeholder="e.g., 10,50 or -5,00"
+          placeholder="z.B. 10,50 oder -5,00"
           required
         />
         <p className="text-xs text-muted-foreground">
-          Use positive for deposits, negative for withdrawals
+          Positiv für Einzahlungen, negativ für Auszahlungen
         </p>
       </div>
 
       <div className="grid gap-2">
-        <Label htmlFor="description">Description</Label>
+        <Label htmlFor="description">Beschreibung</Label>
         <Input
           id="description"
           type="text"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="e.g., Weekly allowance"
+          placeholder="z.B. Wöchentliches Taschengeld"
           maxLength={500}
         />
       </div>
@@ -109,7 +109,7 @@ export function TransactionForm({
           className="h-4 w-4 rounded border-input"
         />
         <Label htmlFor="isPaid" className="font-normal">
-          Already paid
+          Bereits bezahlt
         </Label>
       </div>
 
@@ -118,15 +118,15 @@ export function TransactionForm({
           {isSubmitting ? (
             <>
               <Spinner className="mr-2" />
-              Creating...
+              Wird erstellt...
             </>
           ) : (
-            "Add Transaction"
+            "Transaktion hinzufügen"
           )}
         </Button>
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel}>
-            Cancel
+            Abbrechen
           </Button>
         )}
       </div>

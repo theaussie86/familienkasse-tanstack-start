@@ -39,7 +39,7 @@ export function AccountList({
       <Card className="border-dashed">
         <CardContent className="p-8 text-center">
           <p className="text-muted-foreground">
-            No accounts yet. Create your first account to get started.
+            Noch keine Konten vorhanden. Erstelle dein erstes Konto, um loszulegen.
           </p>
         </CardContent>
       </Card>

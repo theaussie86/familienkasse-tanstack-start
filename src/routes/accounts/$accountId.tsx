@@ -30,7 +30,7 @@ interface TransactionListResult {
 async function fetchAccount(accountId: string): Promise<AccountWithBalance> {
   const response = await fetch(`/api/accounts/${accountId}`);
   if (!response.ok) {
-    throw new Error("Failed to fetch account");
+    throw new Error("Konto konnte nicht geladen werden");
   }
   return response.json();
 }
@@ -40,7 +40,7 @@ async function fetchTransactions(
 ): Promise<TransactionListResult> {
   const response = await fetch(`/api/accounts/${accountId}/transactions`);
   if (!response.ok) {
-    throw new Error("Failed to fetch transactions");
+    throw new Error("Transaktionen konnten nicht geladen werden");
   }
   return response.json();
 }
@@ -94,13 +94,13 @@ function AccountDetail() {
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
-              Account not found or you don't have access.
+              Konto nicht gefunden oder kein Zugriff.
             </AlertDescription>
           </Alert>
           <Button variant="ghost" size="sm" asChild>
             <Link to="/dashboard">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Dashboard
+              Zurück zum Dashboard
             </Link>
           </Button>
         </div>
@@ -117,7 +117,7 @@ function AccountDetail() {
           <Button variant="ghost" size="sm" asChild>
             <Link to="/dashboard">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Dashboard
+              Zurück zum Dashboard
             </Link>
           </Button>
         </div>
@@ -134,23 +134,23 @@ function AccountDetail() {
           </p>
           {account.recurringAllowanceEnabled && account.recurringAllowanceAmount > 0 && (
             <p className="text-sm text-muted-foreground">
-              Weekly allowance: {formatCurrency(account.recurringAllowanceAmount)}
+              Wöchentliches Taschengeld: {formatCurrency(account.recurringAllowanceAmount)}
             </p>
           )}
         </div>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-medium">Transactions</h2>
+            <h2 className="text-lg font-medium">Transaktionen</h2>
             {!showForm && (
-              <Button onClick={() => setShowForm(true)}>Add Transaction</Button>
+              <Button onClick={() => setShowForm(true)}>Transaktion hinzufügen</Button>
             )}
           </div>
 
           {showForm && (
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm">New Transaction</CardTitle>
+                <CardTitle className="text-sm">Neue Transaktion</CardTitle>
               </CardHeader>
               <CardContent>
                 <TransactionForm
@@ -165,7 +165,7 @@ function AccountDetail() {
           {transactionsError ? (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
-              <AlertDescription>Failed to load transactions.</AlertDescription>
+              <AlertDescription>Transaktionen konnten nicht geladen werden.</AlertDescription>
             </Alert>
           ) : (
             <TransactionList

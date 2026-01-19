@@ -34,7 +34,7 @@ export const Route = createFileRoute("/api/accounts/$accountId/")({
           );
 
           if (!account) {
-            return notFound("Account not found");
+            return notFound("Konto nicht gefunden");
           }
 
           return jsonResponse(account);
@@ -58,7 +58,7 @@ export const Route = createFileRoute("/api/accounts/$accountId/")({
           const parsed = updateAccountSchema.safeParse(body);
 
           if (!parsed.success) {
-            return badRequest(parsed.error.errors[0]?.message || "Invalid input");
+            return badRequest(parsed.error.errors[0]?.message || "Ungültige Eingabe");
           }
 
           const account = await updateAccount(
@@ -68,7 +68,7 @@ export const Route = createFileRoute("/api/accounts/$accountId/")({
           );
 
           if (!account) {
-            return notFound("Account not found");
+            return notFound("Konto nicht gefunden");
           }
 
           return jsonResponse(account);
@@ -91,7 +91,7 @@ export const Route = createFileRoute("/api/accounts/$accountId/")({
           const deleted = await deleteAccount(params.accountId, session.user.id);
 
           if (!deleted) {
-            return notFound("Account not found");
+            return notFound("Konto nicht gefunden");
           }
 
           return new Response(null, { status: 204 });

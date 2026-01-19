@@ -42,12 +42,12 @@ export function DeleteAccountDialog({
 
       if (!response.ok && response.status !== 204) {
         const data = await response.json();
-        throw new Error(data.message || "Failed to delete account");
+        throw new Error(data.message || "Konto konnte nicht gelöscht werden");
       }
 
       onSuccess();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      setError(err instanceof Error ? err.message : "Ein Fehler ist aufgetreten");
       setIsDeleting(false);
     }
   };
@@ -56,11 +56,12 @@ export function DeleteAccountDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete Account?</AlertDialogTitle>
+          <AlertDialogTitle>Konto löschen?</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete{" "}
-            <span className="font-medium text-foreground">{account.name}</span>?
-            This will also delete all transactions. Current balance:{" "}
+            Möchtest du{" "}
+            <span className="font-medium text-foreground">{account.name}</span>{" "}
+            wirklich löschen? Alle Transaktionen werden ebenfalls gelöscht.
+            Aktueller Kontostand:{" "}
             <span className="font-medium tabular-nums">
               {formatCurrency(account.balance)}
             </span>
@@ -75,7 +76,7 @@ export function DeleteAccountDialog({
         )}
 
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isDeleting}>Abbrechen</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={isDeleting}
@@ -84,10 +85,10 @@ export function DeleteAccountDialog({
             {isDeleting ? (
               <>
                 <Spinner className="mr-2" />
-                Deleting...
+                Wird gelöscht...
               </>
             ) : (
-              "Delete Account"
+              "Konto löschen"
             )}
           </AlertDialogAction>
         </AlertDialogFooter>

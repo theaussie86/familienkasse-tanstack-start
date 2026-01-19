@@ -47,7 +47,7 @@ export function AllowanceConfigForm({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <Label htmlFor="allowance-enabled">Weekly Allowance</Label>
+        <Label htmlFor="allowance-enabled">Wöchentliches Taschengeld</Label>
         <button
           type="button"
           id="allowance-enabled"
@@ -70,7 +70,7 @@ export function AllowanceConfigForm({
 
       {enabled && (
         <div className="grid gap-2">
-          <Label htmlFor="allowance-amount">Amount per Week</Label>
+          <Label htmlFor="allowance-amount">Betrag pro Woche</Label>
           <div className="relative">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
               EUR
@@ -86,14 +86,14 @@ export function AllowanceConfigForm({
             />
           </div>
           <p className="text-xs text-muted-foreground">
-            This amount will be automatically added every Sunday at midnight.
+            Dieser Betrag wird jeden Sonntag um Mitternacht automatisch hinzugefügt.
           </p>
         </div>
       )}
 
       {!enabled && config.recurringAllowanceAmount > 0 && (
         <p className="text-xs text-muted-foreground">
-          Previously configured: {formatCurrency(config.recurringAllowanceAmount)} per week
+          Zuvor konfiguriert: {formatCurrency(config.recurringAllowanceAmount)} pro Woche
         </p>
       )}
     </div>

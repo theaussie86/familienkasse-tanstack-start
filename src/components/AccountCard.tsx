@@ -56,7 +56,7 @@ export function AccountCard({ account, onEdit, onDelete }: AccountCardProps) {
                       e.stopPropagation();
                       onEdit(account);
                     }}
-                    title="Edit account"
+                    title="Konto bearbeiten"
                   >
                     <Pencil className="h-4 w-4" />
                   </Button>
@@ -70,7 +70,7 @@ export function AccountCard({ account, onEdit, onDelete }: AccountCardProps) {
                       onDelete(account);
                     }}
                     className="hover:text-destructive"
-                    title="Delete account"
+                    title="Konto löschen"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

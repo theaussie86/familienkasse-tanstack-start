@@ -52,7 +52,7 @@ export function EditAccountDialog({
     setError(null);
 
     if (!name.trim()) {
-      setError("Name is required");
+      setError("Name ist erforderlich");
       return;
     }
 
@@ -89,12 +89,12 @@ export function EditAccountDialog({
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || "Failed to update account");
+        throw new Error(data.message || "Konto konnte nicht aktualisiert werden");
       }
 
       onSuccess();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      setError(err instanceof Error ? err.message : "Ein Fehler ist aufgetreten");
     } finally {
       setIsSubmitting(false);
     }
@@ -104,7 +104,7 @@ export function EditAccountDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Account</DialogTitle>
+          <DialogTitle>Konto bearbeiten</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -116,7 +116,7 @@ export function EditAccountDialog({
           )}
 
           <div className="grid gap-2">
-            <Label htmlFor="edit-name">Account Name *</Label>
+            <Label htmlFor="edit-name">Kontoname *</Label>
             <Input
               id="edit-name"
               type="text"
@@ -141,16 +141,16 @@ export function EditAccountDialog({
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              Abbrechen
             </Button>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? (
                 <>
                   <Spinner className="mr-2" />
-                  Saving...
+                  Wird gespeichert...
                 </>
               ) : (
-                "Save Changes"
+                "Änderungen speichern"
               )}
             </Button>
           </DialogFooter>
