@@ -4,6 +4,7 @@ import {
   familienkasseAccount,
   familienkasseTransaction,
   type FamilienkasseAccount,
+  type FamilienkasseTransaction,
   type UpdateFamilienkasseAccount,
 } from "@/db/schema";
 import { generateId } from "@/lib/id";
@@ -215,4 +216,50 @@ export async function getAccountsWithAllowanceEnabled(): Promise<FamilienkasseAc
     );
 
   return accounts;
+}
+
+export interface AccountWithUnpaidTransactions extends AccountWithBalance {
+  unpaidTransactions: FamilienkasseTransaction[];
+}
+
+/**
+ * Get all accounts for a user with their unpaid transactions.
+ * This is optimized for the dashboard view.
+ */
+export async function getAccountsWithUnpaidTransactions(
+  userId: string
+): Promise<AccountWithUnpaidTransactions[]> {
+  // First get the accounts with balances
+  const accounts = await getAccountsWithBalances(userId);
+
+  if (accounts.length === 0) {
+    return [];
+  }
+
+  // Get all unpaid transactions for these accounts
+  const accountIds = accounts.map((a) => a.id);
+  const unpaidTransactions = await db
+    .select()
+    .from(familienkasseTransaction)
+    .where(
+      and(
+        sql`${familienkasseTransaction.accountId} IN ${accountIds}`,
+        eq(familienkasseTransaction.isPaid, false)
+      )
+    )
+    .orderBy(sql`${familienkasseTransaction.createdAt} DESC`);
+
+  // Group transactions by account
+  const transactionsByAccount = new Map<string, FamilienkasseTransaction[]>();
+  for (const tx of unpaidTransactions) {
+    const existing = transactionsByAccount.get(tx.accountId) || [];
+    existing.push(tx);
+    transactionsByAccount.set(tx.accountId, existing);
+  }
+
+  // Combine accounts with their unpaid transactions
+  return accounts.map((account) => ({
+    ...account,
+    unpaidTransactions: transactionsByAccount.get(account.id) || [],
+  }));
 }

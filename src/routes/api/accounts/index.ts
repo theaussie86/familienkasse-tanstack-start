@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { auth } from "@/lib/auth";
 import {
-  getAccountsWithBalances,
+  getAccountsWithUnpaidTransactions,
   createAccount,
 } from "@/db/queries/accounts";
 import {
@@ -26,7 +26,7 @@ export const Route = createFileRoute("/api/accounts/")({
             return unauthorized();
           }
 
-          const accounts = await getAccountsWithBalances(session.user.id);
+          const accounts = await getAccountsWithUnpaidTransactions(session.user.id);
           return jsonResponse(accounts);
         } catch (error) {
           console.error("Error fetching accounts:", error);

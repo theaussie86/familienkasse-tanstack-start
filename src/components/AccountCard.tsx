@@ -1,30 +1,38 @@
 import { Link } from "@tanstack/react-router";
 import { Pencil, Trash2 } from "lucide-react";
-import type { AccountWithBalance } from "@/db/queries/accounts";
+import type { AccountWithUnpaidTransactions } from "@/db/queries/accounts";
 import { formatCurrency } from "@/lib/currency";
 import { cn } from "@/lib/utils";
 import { balanceStateClasses, getBalanceState } from "@/lib/balance-utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { UnpaidTransactionItem } from "./UnpaidTransactionItem";
 
 interface AccountCardProps {
-  account: AccountWithBalance;
-  onEdit?: (account: AccountWithBalance) => void;
-  onDelete?: (account: AccountWithBalance) => void;
+  account: AccountWithUnpaidTransactions;
+  onEdit?: (account: AccountWithUnpaidTransactions) => void;
+  onDelete?: (account: AccountWithUnpaidTransactions) => void;
+  onTransactionUpdate?: () => void;
 }
 
-export function AccountCard({ account, onEdit, onDelete }: AccountCardProps) {
+export function AccountCard({
+  account,
+  onEdit,
+  onDelete,
+  onTransactionUpdate,
+}: AccountCardProps) {
   const balanceState = getBalanceState(account.paidBalance);
   const hasUnpaidDifference = account.paidBalance !== account.balance;
+  const hasUnpaidTransactions = account.unpaidTransactions.length > 0;
 
   return (
-    <Card className="hover:bg-muted/50 transition-colors">
+    <Card className="transition-colors">
       <CardContent className="p-4">
         <div className="flex items-center justify-between gap-4">
           <Link
             to="/accounts/$accountId"
             params={{ accountId: account.id }}
-            className="flex-1 min-w-0"
+            className="flex-1 min-w-0 hover:underline"
           >
             <h3 className="font-medium truncate">{account.name}</h3>
           </Link>
@@ -79,6 +87,23 @@ export function AccountCard({ account, onEdit, onDelete }: AccountCardProps) {
             )}
           </div>
         </div>
+
+        {hasUnpaidTransactions && (
+          <div className="mt-3 pt-3 border-t">
+            <p className="text-xs text-muted-foreground mb-2">
+              Offene Transaktionen ({account.unpaidTransactions.length})
+            </p>
+            <div className="space-y-1">
+              {account.unpaidTransactions.map((transaction) => (
+                <UnpaidTransactionItem
+                  key={transaction.id}
+                  transaction={transaction}
+                  onUpdate={onTransactionUpdate || (() => {})}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

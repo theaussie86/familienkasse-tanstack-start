@@ -11,7 +11,7 @@ import { DeleteAccountDialog } from "@/components/DeleteAccountDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import type { AccountWithBalance } from "@/db/queries/accounts";
+import type { AccountWithUnpaidTransactions } from "@/db/queries/accounts";
 
 export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/dashboard")({
   },
 });
 
-async function fetchAccounts(): Promise<AccountWithBalance[]> {
+async function fetchAccounts(): Promise<AccountWithUnpaidTransactions[]> {
   const response = await fetch("/api/accounts");
   if (!response.ok) {
     throw new Error("Konten konnten nicht geladen werden");
@@ -34,9 +34,9 @@ function Dashboard() {
 
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingAccount, setEditingAccount] =
-    useState<AccountWithBalance | null>(null);
+    useState<AccountWithUnpaidTransactions | null>(null);
   const [deletingAccount, setDeletingAccount] =
-    useState<AccountWithBalance | null>(null);
+    useState<AccountWithUnpaidTransactions | null>(null);
 
   const {
     data: accounts,
@@ -59,6 +59,10 @@ function Dashboard() {
 
   const handleAccountDeleted = () => {
     setDeletingAccount(null);
+    queryClient.invalidateQueries({ queryKey: ["accounts"] });
+  };
+
+  const handleTransactionUpdate = () => {
     queryClient.invalidateQueries({ queryKey: ["accounts"] });
   };
 
@@ -111,6 +115,7 @@ function Dashboard() {
               isLoading={isLoading}
               onEdit={setEditingAccount}
               onDelete={setDeletingAccount}
+              onTransactionUpdate={handleTransactionUpdate}
             />
           )}
         </div>

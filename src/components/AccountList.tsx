@@ -1,14 +1,15 @@
-import type { AccountWithBalance } from "@/db/queries/accounts";
+import type { AccountWithUnpaidTransactions } from "@/db/queries/accounts";
 
 import { AccountCard } from "./AccountCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface AccountListProps {
-  accounts: Array<AccountWithBalance>;
+  accounts: Array<AccountWithUnpaidTransactions>;
   isLoading?: boolean;
-  onEdit?: (account: AccountWithBalance) => void;
-  onDelete?: (account: AccountWithBalance) => void;
+  onEdit?: (account: AccountWithUnpaidTransactions) => void;
+  onDelete?: (account: AccountWithUnpaidTransactions) => void;
+  onTransactionUpdate?: () => void;
 }
 
 export function AccountList({
@@ -16,6 +17,7 @@ export function AccountList({
   isLoading,
   onEdit,
   onDelete,
+  onTransactionUpdate,
 }: AccountListProps) {
   if (isLoading) {
     return (
@@ -54,6 +56,7 @@ export function AccountList({
           account={account}
           onEdit={onEdit}
           onDelete={onDelete}
+          onTransactionUpdate={onTransactionUpdate}
         />
       ))}
     </div>
