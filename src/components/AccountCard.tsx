@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil } from "lucide-react";
 import type { AccountWithUnpaidTransactions } from "@/db/queries/accounts";
 import { formatCurrency } from "@/lib/currency";
 import { cn } from "@/lib/utils";
@@ -11,14 +11,12 @@ import { UnpaidTransactionItem } from "./UnpaidTransactionItem";
 interface AccountCardProps {
   account: AccountWithUnpaidTransactions;
   onEdit?: (account: AccountWithUnpaidTransactions) => void;
-  onDelete?: (account: AccountWithUnpaidTransactions) => void;
   onTransactionUpdate?: () => void;
 }
 
 export function AccountCard({
   account,
   onEdit,
-  onDelete,
   onTransactionUpdate,
 }: AccountCardProps) {
   const balanceState = getBalanceState(account.paidBalance);
@@ -38,37 +36,19 @@ export function AccountCard({
             <h3 className="text-lg font-semibold truncate">{account.name}</h3>
           </Link>
 
-          {(onEdit || onDelete) && (
-            <div className="flex items-center gap-0.5">
-              {onEdit && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-10 w-10"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onEdit(account);
-                  }}
-                  title="Konto bearbeiten"
-                >
-                  <Pencil className="h-5 w-5" />
-                </Button>
-              )}
-              {onDelete && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-10 w-10 hover:text-destructive"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDelete(account);
-                  }}
-                  title="Konto löschen"
-                >
-                  <Trash2 className="h-5 w-5" />
-                </Button>
-              )}
-            </div>
+          {onEdit && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-10 w-10"
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(account);
+              }}
+              title="Konto bearbeiten"
+            >
+              <Pencil className="h-5 w-5" />
+            </Button>
           )}
         </div>
 

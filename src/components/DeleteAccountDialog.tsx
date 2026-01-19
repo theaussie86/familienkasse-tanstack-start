@@ -3,7 +3,6 @@ import type { AccountWithBalance } from "@/db/queries/accounts";
 import { formatCurrency } from "@/lib/currency";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -12,6 +11,9 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { AlertCircle } from "lucide-react";
 
@@ -30,8 +32,13 @@ export function DeleteAccountDialog({
 }: DeleteAccountDialogProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [confirmationInput, setConfirmationInput] = useState("");
+
+  const isConfirmed = confirmationInput === account.name;
 
   const handleDelete = async () => {
+    if (!isConfirmed) return;
+
     setError(null);
     setIsDeleting(true);
 
@@ -52,21 +59,50 @@ export function DeleteAccountDialog({
     }
   };
 
+  const handleOpenChange = (newOpen: boolean) => {
+    if (!newOpen) {
+      setConfirmationInput("");
+      setError(null);
+    }
+    onOpenChange(newOpen);
+  };
+
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <AlertDialog open={open} onOpenChange={handleOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Konto löschen?</AlertDialogTitle>
-          <AlertDialogDescription>
-            Möchtest du{" "}
-            <span className="font-medium text-foreground">{account.name}</span>{" "}
-            wirklich löschen? Alle Transaktionen werden ebenfalls gelöscht.
-            Aktueller Kontostand:{" "}
-            <span className="font-medium tabular-nums">
-              {formatCurrency(account.balance)}
-            </span>
+          <AlertDialogDescription asChild>
+            <div className="space-y-3">
+              <p>
+                Möchtest du{" "}
+                <span className="font-medium text-foreground">{account.name}</span>{" "}
+                wirklich löschen? Alle Transaktionen werden ebenfalls gelöscht.
+              </p>
+              <p>
+                Aktueller Kontostand:{" "}
+                <span className="font-medium tabular-nums">
+                  {formatCurrency(account.balance)}
+                </span>
+              </p>
+            </div>
           </AlertDialogDescription>
         </AlertDialogHeader>
+
+        <div className="space-y-2">
+          <Label htmlFor="confirm-name">
+            Gib zur Bestätigung den Kontonamen ein:{" "}
+            <span className="font-medium">{account.name}</span>
+          </Label>
+          <Input
+            id="confirm-name"
+            value={confirmationInput}
+            onChange={(e) => setConfirmationInput(e.target.value)}
+            placeholder={account.name}
+            disabled={isDeleting}
+            autoComplete="off"
+          />
+        </div>
 
         {error && (
           <Alert variant="destructive">
@@ -77,10 +113,10 @@ export function DeleteAccountDialog({
 
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isDeleting}>Abbrechen</AlertDialogCancel>
-          <AlertDialogAction
+          <Button
             onClick={handleDelete}
-            disabled={isDeleting}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            disabled={isDeleting || !isConfirmed}
+            variant="destructive"
           >
             {isDeleting ? (
               <>
@@ -90,7 +126,7 @@ export function DeleteAccountDialog({
             ) : (
               "Konto löschen"
             )}
-          </AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

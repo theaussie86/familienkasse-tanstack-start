@@ -7,7 +7,6 @@ import { authClient } from "@/lib/auth-client";
 import { AccountList } from "@/components/AccountList";
 import { CreateAccountForm } from "@/components/CreateAccountForm";
 import { EditAccountDialog } from "@/components/EditAccountDialog";
-import { DeleteAccountDialog } from "@/components/DeleteAccountDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -35,8 +34,6 @@ function Dashboard() {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingAccount, setEditingAccount] =
     useState<AccountWithUnpaidTransactions | null>(null);
-  const [deletingAccount, setDeletingAccount] =
-    useState<AccountWithUnpaidTransactions | null>(null);
 
   const {
     data: accounts,
@@ -54,11 +51,6 @@ function Dashboard() {
 
   const handleAccountUpdated = () => {
     setEditingAccount(null);
-    queryClient.invalidateQueries({ queryKey: ["accounts"] });
-  };
-
-  const handleAccountDeleted = () => {
-    setDeletingAccount(null);
     queryClient.invalidateQueries({ queryKey: ["accounts"] });
   };
 
@@ -114,7 +106,6 @@ function Dashboard() {
               accounts={accounts || []}
               isLoading={isLoading}
               onEdit={setEditingAccount}
-              onDelete={setDeletingAccount}
               onTransactionUpdate={handleTransactionUpdate}
             />
           )}
@@ -127,15 +118,6 @@ function Dashboard() {
           open={!!editingAccount}
           onOpenChange={(open) => !open && setEditingAccount(null)}
           onSuccess={handleAccountUpdated}
-        />
-      )}
-
-      {deletingAccount && (
-        <DeleteAccountDialog
-          account={deletingAccount}
-          open={!!deletingAccount}
-          onOpenChange={(open) => !open && setDeletingAccount(null)}
-          onSuccess={handleAccountDeleted}
         />
       )}
     </div>

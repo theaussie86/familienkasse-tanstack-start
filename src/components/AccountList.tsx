@@ -8,7 +8,6 @@ interface AccountListProps {
   accounts: Array<AccountWithUnpaidTransactions>;
   isLoading?: boolean;
   onEdit?: (account: AccountWithUnpaidTransactions) => void;
-  onDelete?: (account: AccountWithUnpaidTransactions) => void;
   onTransactionUpdate?: () => void;
 }
 
@@ -16,7 +15,6 @@ export function AccountList({
   accounts,
   isLoading,
   onEdit,
-  onDelete,
   onTransactionUpdate,
 }: AccountListProps) {
   if (isLoading) {
@@ -55,7 +53,6 @@ export function AccountList({
           key={account.id}
           account={account}
           onEdit={onEdit}
-          onDelete={onDelete}
           onTransactionUpdate={onTransactionUpdate}
         />
       ))}

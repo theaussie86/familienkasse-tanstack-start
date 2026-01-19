@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, AlertCircle } from "lucide-react";
+import { ArrowLeft, AlertCircle, Trash2 } from "lucide-react";
 import { authMiddleware } from "@/lib/middleware";
 import type { AccountWithBalance } from "@/db/queries/accounts";
 import type { FamilienkasseTransaction } from "@/db/schema";
@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { getBalanceState, balanceStateClasses } from "@/lib/balance-utils";
 import { TransactionForm } from "@/components/TransactionForm";
 import { TransactionList } from "@/components/TransactionList";
+import { DeleteAccountDialog } from "@/components/DeleteAccountDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -47,8 +48,10 @@ async function fetchTransactions(
 
 function AccountDetail() {
   const { accountId } = Route.useParams();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const {
     data: account,
@@ -73,6 +76,11 @@ function AccountDetail() {
     queryClient.invalidateQueries({ queryKey: ["transactions", accountId] });
     queryClient.invalidateQueries({ queryKey: ["accounts"] });
     setShowForm(false);
+  };
+
+  const handleAccountDeleted = () => {
+    queryClient.invalidateQueries({ queryKey: ["accounts"] });
+    navigate({ to: "/dashboard" });
   };
 
   if (accountLoading) {
@@ -123,7 +131,18 @@ function AccountDetail() {
         </div>
 
         <div className="space-y-2">
-          <h1 className="text-2xl font-semibold">{account.name}</h1>
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-semibold">{account.name}</h1>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-10 w-10 hover:text-destructive"
+              onClick={() => setShowDeleteDialog(true)}
+              title="Konto löschen"
+            >
+              <Trash2 className="h-5 w-5" />
+            </Button>
+          </div>
           <p
             className={cn(
               "text-3xl font-bold tabular-nums",
@@ -176,6 +195,13 @@ function AccountDetail() {
           )}
         </div>
       </div>
+
+      <DeleteAccountDialog
+        account={account}
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+        onSuccess={handleAccountDeleted}
+      />
     </div>
   );
 }
