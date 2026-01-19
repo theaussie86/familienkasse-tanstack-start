@@ -217,6 +217,8 @@ TanStack Router with file-based routing:
 ## Active Technologies
 - TypeScript 5.7, React 19.2.0 + TanStack Start, TanStack Router 1.132, TanStack Query 5.66, Better-Auth 1.4 (001-data-model)
 - PostgreSQL via Drizzle ORM 0.45 (001-data-model)
+- TypeScript 5.7 + TanStack Start 1.132, Drizzle ORM 0.45, postgres driver 3.4, Better-Auth 1.4 (002-data-migration)
+- PostgreSQL (local target via Drizzle ORM, Supabase source via direct postgres connection) (002-data-migration)
 
 ## Recent Changes
 - 001-data-model: Added TypeScript 5.7, React 19.2.0 + TanStack Start, TanStack Router 1.132, TanStack Query 5.66, Better-Auth 1.4
