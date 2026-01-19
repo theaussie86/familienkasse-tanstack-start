@@ -12,11 +12,11 @@ export function NotFound() {
         Hoppla! Die Seite, nach der Sie suchen, scheint nicht zu existieren oder wurde verschoben.
       </p>
       <Link
-        to="/"
+        to="/dashboard"
         className="inline-flex items-center gap-2 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity"
       >
         <MoveLeft size={18} />
-        Zurück zur Startseite
+        Zurück zum Dashboard
       </Link>
     </div>
   )
