@@ -13,3 +13,6 @@ count.txt
 todos.json
 .auto-claude
 .gemini
+
+# Local Netlify folder
+.netlify
