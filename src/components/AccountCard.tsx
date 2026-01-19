@@ -14,7 +14,8 @@ interface AccountCardProps {
 }
 
 export function AccountCard({ account, onEdit, onDelete }: AccountCardProps) {
-  const balanceState = getBalanceState(account.balance);
+  const balanceState = getBalanceState(account.paidBalance);
+  const hasUnpaidDifference = account.paidBalance !== account.balance;
 
   return (
     <Card className="hover:bg-muted/50 transition-colors">
@@ -29,14 +30,21 @@ export function AccountCard({ account, onEdit, onDelete }: AccountCardProps) {
           </Link>
 
           <div className="flex items-center gap-3">
-            <span
-              className={cn(
-                "text-lg font-semibold tabular-nums",
-                balanceStateClasses[balanceState]
+            <div className="text-right">
+              <span
+                className={cn(
+                  "text-lg font-semibold tabular-nums",
+                  balanceStateClasses[balanceState]
+                )}
+              >
+                {formatCurrency(account.paidBalance)}
+              </span>
+              {hasUnpaidDifference && (
+                <span className="text-sm text-muted-foreground ml-2 tabular-nums">
+                  (Soll: {formatCurrency(account.balance)})
+                </span>
               )}
-            >
-              {formatCurrency(account.balance)}
-            </span>
+            </div>
 
             {(onEdit || onDelete) && (
               <div className="flex items-center gap-1">

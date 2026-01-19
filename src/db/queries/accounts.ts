@@ -9,7 +9,8 @@ import {
 import { generateId } from "@/lib/id";
 
 export interface AccountWithBalance extends FamilienkasseAccount {
-  balance: number;
+  balance: number; // Total balance (all transactions)
+  paidBalance: number; // Actual balance (only paid transactions)
 }
 
 export interface UpdateAccountInput {
@@ -38,6 +39,10 @@ export async function getAccountsWithBalances(
         sql<number>`COALESCE(SUM(${familienkasseTransaction.amount}), 0)`.as(
           "balance"
         ),
+      paidBalance:
+        sql<number>`COALESCE(SUM(CASE WHEN ${familienkasseTransaction.isPaid} THEN ${familienkasseTransaction.amount} ELSE 0 END), 0)`.as(
+          "paid_balance"
+        ),
     })
     .from(familienkasseAccount)
     .leftJoin(
@@ -51,6 +56,7 @@ export async function getAccountsWithBalances(
   return results.map((r) => ({
     ...r,
     balance: Number(r.balance),
+    paidBalance: Number(r.paidBalance),
   }));
 }
 
@@ -75,6 +81,10 @@ export async function getAccountWithBalance(
         sql<number>`COALESCE(SUM(${familienkasseTransaction.amount}), 0)`.as(
           "balance"
         ),
+      paidBalance:
+        sql<number>`COALESCE(SUM(CASE WHEN ${familienkasseTransaction.isPaid} THEN ${familienkasseTransaction.amount} ELSE 0 END), 0)`.as(
+          "paid_balance"
+        ),
     })
     .from(familienkasseAccount)
     .leftJoin(
@@ -92,6 +102,7 @@ export async function getAccountWithBalance(
   return {
     ...account,
     balance: Number(account.balance),
+    paidBalance: Number(account.paidBalance),
   };
 }
 
