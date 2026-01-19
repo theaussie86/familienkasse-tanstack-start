@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import type { AllowanceConfig } from "@/db/schema";
 import { formatCurrency } from "@/lib/currency";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface AllowanceConfigFormProps {
   config: AllowanceConfig;
@@ -30,10 +32,8 @@ export function AllowanceConfigForm({
   };
 
   const handleAmountChange = (value: string) => {
-    // Normalize comma to period for decimal separator (German locale support)
     const normalizedValue = value.replace(",", ".");
 
-    // Allow only valid decimal inputs
     if (normalizedValue === "" || /^\d*\.?\d{0,2}$/.test(normalizedValue)) {
       setAmountInput(normalizedValue);
       const cents = Math.round(parseFloat(normalizedValue || "0") * 100);
@@ -47,12 +47,7 @@ export function AllowanceConfigForm({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <label
-          htmlFor="allowance-enabled"
-          className="text-sm font-medium text-neutral-700 dark:text-neutral-300"
-        >
-          Weekly Allowance
-        </label>
+        <Label htmlFor="allowance-enabled">Weekly Allowance</Label>
         <button
           type="button"
           id="allowance-enabled"
@@ -61,12 +56,12 @@ export function AllowanceConfigForm({
           onClick={() => handleEnabledChange(!enabled)}
           className={`
             relative inline-flex h-6 w-11 items-center rounded-full transition-colors
-            ${enabled ? "bg-neutral-900 dark:bg-neutral-100" : "bg-neutral-300 dark:bg-neutral-700"}
+            ${enabled ? "bg-primary" : "bg-input"}
           `}
         >
           <span
             className={`
-              inline-block h-4 w-4 transform rounded-full bg-white dark:bg-neutral-900 transition-transform
+              inline-block h-4 w-4 transform rounded-full bg-background transition-transform
               ${enabled ? "translate-x-6" : "translate-x-1"}
             `}
           />
@@ -74,35 +69,30 @@ export function AllowanceConfigForm({
       </div>
 
       {enabled && (
-        <div className="space-y-2">
-          <label
-            htmlFor="allowance-amount"
-            className="text-sm font-medium text-neutral-700 dark:text-neutral-300"
-          >
-            Amount per Week
-          </label>
+        <div className="grid gap-2">
+          <Label htmlFor="allowance-amount">Amount per Week</Label>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
               EUR
             </span>
-            <input
+            <Input
               id="allowance-amount"
               type="text"
               inputMode="decimal"
               value={amountInput}
               onChange={(e) => handleAmountChange(e.target.value)}
-              className="w-full h-10 pl-12 pr-3 border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-400"
+              className="pl-12"
               placeholder="0.00"
             />
           </div>
-          <p className="text-xs text-neutral-500 dark:text-neutral-400">
+          <p className="text-xs text-muted-foreground">
             This amount will be automatically added every Sunday at midnight.
           </p>
         </div>
       )}
 
       {!enabled && config.recurringAllowanceAmount > 0 && (
-        <p className="text-xs text-neutral-500 dark:text-neutral-400">
+        <p className="text-xs text-muted-foreground">
           Previously configured: {formatCurrency(config.recurringAllowanceAmount)} per week
         </p>
       )}

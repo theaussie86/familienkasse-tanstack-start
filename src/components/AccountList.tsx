@@ -1,8 +1,11 @@
 import type { AccountWithBalance } from "@/db/queries/accounts";
+
 import { AccountCard } from "./AccountCard";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface AccountListProps {
-  accounts: AccountWithBalance[];
+  accounts: Array<AccountWithBalance>;
   isLoading?: boolean;
   onEdit?: (account: AccountWithBalance) => void;
   onDelete?: (account: AccountWithBalance) => void;
@@ -18,15 +21,14 @@ export function AccountList({
     return (
       <div className="space-y-3">
         {[1, 2, 3].map((i) => (
-          <div
-            key={i}
-            className="border border-neutral-200 dark:border-neutral-800 p-4 animate-pulse"
-          >
-            <div className="flex items-center justify-between">
-              <div className="h-5 w-32 bg-neutral-200 dark:bg-neutral-800 rounded" />
-              <div className="h-6 w-24 bg-neutral-200 dark:bg-neutral-800 rounded" />
-            </div>
-          </div>
+          <Card key={i}>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <Skeleton className="h-5 w-32" />
+                <Skeleton className="h-6 w-24" />
+              </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
     );
@@ -34,11 +36,13 @@ export function AccountList({
 
   if (accounts.length === 0) {
     return (
-      <div className="border border-dashed border-neutral-300 dark:border-neutral-700 p-8 text-center">
-        <p className="text-neutral-500 dark:text-neutral-400">
-          No accounts yet. Create your first account to get started.
-        </p>
-      </div>
+      <Card className="border-dashed">
+        <CardContent className="p-8 text-center">
+          <p className="text-muted-foreground">
+            No accounts yet. Create your first account to get started.
+          </p>
+        </CardContent>
+      </Card>
     );
   }
 

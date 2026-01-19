@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { AlertCircle } from "lucide-react";
 import { authMiddleware } from "@/lib/middleware";
 import { authClient } from "@/lib/auth-client";
 import { AccountList } from "@/components/AccountList";
 import { CreateAccountForm } from "@/components/CreateAccountForm";
 import { EditAccountDialog } from "@/components/EditAccountDialog";
 import { DeleteAccountDialog } from "@/components/DeleteAccountDialog";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import type { AccountWithBalance } from "@/db/queries/accounts";
 
 export const Route = createFileRoute("/dashboard")({
@@ -61,52 +65,46 @@ function Dashboard() {
   return (
     <div className="flex justify-center py-10 px-4">
       <div className="w-full max-w-2xl space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="space-y-1.5">
-            <h1 className="text-2xl font-semibold leading-none tracking-tight">
-              Familienkasse
-            </h1>
-            <p className="text-sm text-neutral-500 dark:text-neutral-400">
-              Welcome back, {session?.user?.name || "User"}
-            </p>
-          </div>
-          <button
-            onClick={() => authClient.signOut()}
-            className="h-9 px-4 text-sm font-medium border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-          >
-            Sign out
-          </button>
+        <div className="space-y-1.5">
+          <h1 className="text-2xl font-semibold leading-none tracking-tight">
+            Familienkasse
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Welcome back, {session?.user?.name || "User"}
+          </p>
         </div>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-medium">Accounts</h2>
             {!showCreateForm && (
-              <button
-                onClick={() => setShowCreateForm(true)}
-                className="h-9 px-4 text-sm font-medium bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
-              >
+              <Button onClick={() => setShowCreateForm(true)}>
                 New Account
-              </button>
+              </Button>
             )}
           </div>
 
           {showCreateForm && (
-            <div className="border border-neutral-200 dark:border-neutral-800 p-4">
-              <h3 className="text-sm font-medium mb-3">Create New Account</h3>
-              <CreateAccountForm
-                onSuccess={handleAccountCreated}
-                onCancel={() => setShowCreateForm(false)}
-              />
-            </div>
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm">Create New Account</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CreateAccountForm
+                  onSuccess={handleAccountCreated}
+                  onCancel={() => setShowCreateForm(false)}
+                />
+              </CardContent>
+            </Card>
           )}
 
           {error ? (
-            <div className="border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-4">
-              <p className="text-sm text-red-700 dark:text-red-400">
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
                 Failed to load accounts. Please try again.
-              </p>
-            </div>
+              </AlertDescription>
+            </Alert>
           ) : (
             <AccountList
               accounts={accounts || []}
@@ -121,16 +119,18 @@ function Dashboard() {
       {editingAccount && (
         <EditAccountDialog
           account={editingAccount}
+          open={!!editingAccount}
+          onOpenChange={(open) => !open && setEditingAccount(null)}
           onSuccess={handleAccountUpdated}
-          onClose={() => setEditingAccount(null)}
         />
       )}
 
       {deletingAccount && (
         <DeleteAccountDialog
           account={deletingAccount}
+          open={!!deletingAccount}
+          onOpenChange={(open) => !open && setDeletingAccount(null)}
           onSuccess={handleAccountDeleted}
-          onClose={() => setDeletingAccount(null)}
         />
       )}
     </div>

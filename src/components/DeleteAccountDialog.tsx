@@ -1,17 +1,32 @@
 import { useState } from "react";
 import type { AccountWithBalance } from "@/db/queries/accounts";
 import { formatCurrency } from "@/lib/currency";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Spinner } from "@/components/ui/spinner";
+import { AlertCircle } from "lucide-react";
 
 interface DeleteAccountDialogProps {
   account: AccountWithBalance;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   onSuccess: () => void;
-  onClose: () => void;
 }
 
 export function DeleteAccountDialog({
   account,
+  open,
+  onOpenChange,
   onSuccess,
-  onClose,
 }: DeleteAccountDialogProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,51 +53,45 @@ export function DeleteAccountDialog({
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-      onClick={onClose}
-    >
-      <div
-        className="w-full max-w-md bg-white dark:bg-neutral-900 p-6 shadow-lg"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h2 className="text-lg font-semibold mb-2">Delete Account</h2>
-
-        <p className="text-neutral-600 dark:text-neutral-400 mb-4">
-          Are you sure you want to delete{" "}
-          <span className="font-medium text-neutral-900 dark:text-neutral-100">
-            {account.name}
-          </span>
-          ? This will also delete all transactions. Current balance:{" "}
-          <span className="font-medium tabular-nums">
-            {formatCurrency(account.balance)}
-          </span>
-        </p>
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Delete Account?</AlertDialogTitle>
+          <AlertDialogDescription>
+            Are you sure you want to delete{" "}
+            <span className="font-medium text-foreground">{account.name}</span>?
+            This will also delete all transactions. Current balance:{" "}
+            <span className="font-medium tabular-nums">
+              {formatCurrency(account.balance)}
+            </span>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
 
         {error && (
-          <div className="border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-3 mb-4">
-            <p className="text-sm text-red-700 dark:text-red-400">{error}</p>
-          </div>
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
         )}
 
-        <div className="flex gap-2">
-          <button
-            type="button"
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+          <AlertDialogAction
             onClick={handleDelete}
             disabled={isDeleting}
-            className="flex-1 h-10 px-4 text-sm font-medium bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 transition-colors"
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
-            {isDeleting ? "Deleting..." : "Delete Account"}
-          </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="h-10 px-4 text-sm font-medium border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
-    </div>
+            {isDeleting ? (
+              <>
+                <Spinner className="mr-2" />
+                Deleting...
+              </>
+            ) : (
+              "Delete Account"
+            )}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

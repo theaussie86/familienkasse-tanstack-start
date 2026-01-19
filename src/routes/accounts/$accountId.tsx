@@ -1,13 +1,19 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { ArrowLeft, AlertCircle } from "lucide-react";
 import { authMiddleware } from "@/lib/middleware";
 import type { AccountWithBalance } from "@/db/queries/accounts";
 import type { FamilienkasseTransaction } from "@/db/schema";
 import { formatCurrency } from "@/lib/currency";
 import { cn } from "@/lib/utils";
+import { getBalanceState, balanceStateClasses } from "@/lib/balance-utils";
 import { TransactionForm } from "@/components/TransactionForm";
 import { TransactionList } from "@/components/TransactionList";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/accounts/$accountId")({
   component: AccountDetail,
@@ -72,11 +78,10 @@ function AccountDetail() {
   if (accountLoading) {
     return (
       <div className="flex justify-center py-10 px-4">
-        <div className="w-full max-w-2xl">
-          <div className="animate-pulse space-y-4">
-            <div className="h-8 w-48 bg-neutral-200 dark:bg-neutral-800 rounded" />
-            <div className="h-12 w-32 bg-neutral-200 dark:bg-neutral-800 rounded" />
-          </div>
+        <div className="w-full max-w-2xl space-y-4">
+          <Skeleton className="h-5 w-36" />
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-10 w-32" />
         </div>
       </div>
     );
@@ -85,35 +90,36 @@ function AccountDetail() {
   if (accountError || !account) {
     return (
       <div className="flex justify-center py-10 px-4">
-        <div className="w-full max-w-2xl">
-          <div className="border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-4">
-            <p className="text-sm text-red-700 dark:text-red-400">
+        <div className="w-full max-w-2xl space-y-4">
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
               Account not found or you don't have access.
-            </p>
-          </div>
-          <Link
-            to="/dashboard"
-            className="inline-block mt-4 text-sm text-neutral-600 dark:text-neutral-400 hover:underline"
-          >
-            ← Back to Dashboard
-          </Link>
+            </AlertDescription>
+          </Alert>
+          <Button variant="ghost" size="sm" asChild>
+            <Link to="/dashboard">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Dashboard
+            </Link>
+          </Button>
         </div>
       </div>
     );
   }
 
-  const isNegative = account.balance < 0;
+  const balanceState = getBalanceState(account.balance);
 
   return (
     <div className="flex justify-center py-10 px-4">
       <div className="w-full max-w-2xl space-y-6">
         <div>
-          <Link
-            to="/dashboard"
-            className="text-sm text-neutral-600 dark:text-neutral-400 hover:underline"
-          >
-            ← Back to Dashboard
-          </Link>
+          <Button variant="ghost" size="sm" asChild>
+            <Link to="/dashboard">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Dashboard
+            </Link>
+          </Button>
         </div>
 
         <div className="space-y-2">
@@ -121,15 +127,13 @@ function AccountDetail() {
           <p
             className={cn(
               "text-3xl font-bold tabular-nums",
-              isNegative
-                ? "text-red-600 dark:text-red-400"
-                : "text-neutral-900 dark:text-neutral-100"
+              balanceStateClasses[balanceState]
             )}
           >
             {formatCurrency(account.balance)}
           </p>
           {account.recurringAllowanceEnabled && account.recurringAllowanceAmount > 0 && (
-            <p className="text-sm text-neutral-500 dark:text-neutral-400">
+            <p className="text-sm text-muted-foreground">
               Weekly allowance: {formatCurrency(account.recurringAllowanceAmount)}
             </p>
           )}
@@ -139,32 +143,30 @@ function AccountDetail() {
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-medium">Transactions</h2>
             {!showForm && (
-              <button
-                onClick={() => setShowForm(true)}
-                className="h-9 px-4 text-sm font-medium bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
-              >
-                Add Transaction
-              </button>
+              <Button onClick={() => setShowForm(true)}>Add Transaction</Button>
             )}
           </div>
 
           {showForm && (
-            <div className="border border-neutral-200 dark:border-neutral-800 p-4">
-              <h3 className="text-sm font-medium mb-4">New Transaction</h3>
-              <TransactionForm
-                accountId={accountId}
-                onSuccess={handleTransactionChange}
-                onCancel={() => setShowForm(false)}
-              />
-            </div>
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm">New Transaction</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <TransactionForm
+                  accountId={accountId}
+                  onSuccess={handleTransactionChange}
+                  onCancel={() => setShowForm(false)}
+                />
+              </CardContent>
+            </Card>
           )}
 
           {transactionsError ? (
-            <div className="border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-4">
-              <p className="text-sm text-red-700 dark:text-red-400">
-                Failed to load transactions.
-              </p>
-            </div>
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>Failed to load transactions.</AlertDescription>
+            </Alert>
           ) : (
             <TransactionList
               transactions={transactionsData?.transactions || []}

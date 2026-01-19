@@ -1,18 +1,34 @@
 import { useState, useEffect } from "react";
+import { AlertCircle } from "lucide-react";
 import type { AccountWithBalance } from "@/db/queries/accounts";
 import type { AllowanceConfig } from "@/db/schema";
 import { AllowanceConfigForm } from "./AllowanceConfigForm";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Separator } from "@/components/ui/separator";
+import { Spinner } from "@/components/ui/spinner";
 
 interface EditAccountDialogProps {
   account: AccountWithBalance;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   onSuccess: () => void;
-  onClose: () => void;
 }
 
 export function EditAccountDialog({
   account,
+  open,
+  onOpenChange,
   onSuccess,
-  onClose,
 }: EditAccountDialogProps) {
   const [name, setName] = useState(account.name);
   const [allowanceConfig, setAllowanceConfig] = useState<AllowanceConfig>({
@@ -28,6 +44,7 @@ export function EditAccountDialog({
       recurringAllowanceEnabled: account.recurringAllowanceEnabled,
       recurringAllowanceAmount: account.recurringAllowanceAmount,
     });
+    setError(null);
   }, [account.name, account.recurringAllowanceEnabled, account.recurringAllowanceAmount]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -39,7 +56,6 @@ export function EditAccountDialog({
       return;
     }
 
-    // Check if anything changed
     const nameChanged = name.trim() !== account.name;
     const allowanceEnabledChanged =
       allowanceConfig.recurringAllowanceEnabled !== account.recurringAllowanceEnabled;
@@ -47,7 +63,7 @@ export function EditAccountDialog({
       allowanceConfig.recurringAllowanceAmount !== account.recurringAllowanceAmount;
 
     if (!nameChanged && !allowanceEnabledChanged && !allowanceAmountChanged) {
-      onClose();
+      onOpenChange(false);
       return;
     }
 
@@ -85,67 +101,61 @@ export function EditAccountDialog({
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-      onClick={onClose}
-    >
-      <div
-        className="w-full max-w-md bg-white dark:bg-neutral-900 p-6 shadow-lg"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h2 className="text-lg font-semibold mb-4">Edit Account</h2>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Edit Account</DialogTitle>
+        </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
-            <div className="border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-3">
-              <p className="text-sm text-red-700 dark:text-red-400">{error}</p>
-            </div>
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
 
-          <div className="space-y-2">
-            <label
-              htmlFor="edit-name"
-              className="text-sm font-medium text-neutral-700 dark:text-neutral-300"
-            >
-              Account Name *
-            </label>
-            <input
+          <div className="grid gap-2">
+            <Label htmlFor="edit-name">Account Name *</Label>
+            <Input
               id="edit-name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full h-10 px-3 border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-400"
               maxLength={100}
               required
               autoFocus
             />
           </div>
 
-          <div className="border-t border-neutral-200 dark:border-neutral-800 pt-4">
-            <AllowanceConfigForm
-              config={allowanceConfig}
-              onChange={setAllowanceConfig}
-            />
-          </div>
+          <Separator />
 
-          <div className="flex gap-2">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="flex-1 h-10 px-4 text-sm font-medium bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 disabled:opacity-50 transition-colors"
-            >
-              {isSubmitting ? "Saving..." : "Save Changes"}
-            </button>
-            <button
+          <AllowanceConfigForm
+            config={allowanceConfig}
+            onChange={setAllowanceConfig}
+          />
+
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
               type="button"
-              onClick={onClose}
-              className="h-10 px-4 text-sm font-medium border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
             >
               Cancel
-            </button>
-          </div>
+            </Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Spinner className="mr-2" />
+                  Saving...
+                </>
+              ) : (
+                "Save Changes"
+              )}
+            </Button>
+          </DialogFooter>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

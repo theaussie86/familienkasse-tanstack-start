@@ -19,10 +19,10 @@
 
 **Purpose**: Install shadcn/ui components and prepare shared utilities
 
-- [ ] T001 Install all required shadcn/ui components via CLI: `npx shadcn@latest add button card input label badge skeleton alert alert-dialog dialog separator spinner`
-- [ ] T002 Verify all shadcn/ui components exist in src/components/ui/ (button, card, input, label, badge, skeleton, alert, alert-dialog, dialog, separator, spinner)
-- [ ] T003 [P] Add shared utility types and functions from contracts to src/lib/balance-utils.ts (BalanceState, getBalanceState, balanceStateClasses)
-- [ ] T004 [P] Add shared transaction status badge utilities to src/lib/transaction-utils.ts (TransactionStatus, transactionStatusBadge)
+- [X] T001 Install all required shadcn/ui components via CLI: `npx shadcn@latest add button card input label badge skeleton alert alert-dialog dialog separator spinner`
+- [X] T002 Verify all shadcn/ui components exist in src/components/ui/ (button, card, input, label, badge, skeleton, alert, alert-dialog, dialog, separator, spinner)
+- [X] T003 [P] Add shared utility types and functions from contracts to src/lib/balance-utils.ts (BalanceState, getBalanceState, balanceStateClasses)
+- [X] T004 [P] Add shared transaction status badge utilities to src/lib/transaction-utils.ts (TransactionStatus, transactionStatusBadge)
 
 ---
 
@@ -32,8 +32,8 @@
 
 **⚠️ CRITICAL**: Header is used across all routes and should be done first
 
-- [ ] T005 Refactor src/components/Header.tsx to use shadcn/ui Button component (ghost variant for sign-out)
-- [ ] T006 Verify Header renders correctly on all pages (dashboard, account detail, login)
+- [X] T005 Refactor src/components/Header.tsx to use shadcn/ui Button component (ghost variant for sign-out)
+- [X] T006 Verify Header renders correctly on all pages (dashboard, account detail, login)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
@@ -47,12 +47,12 @@
 
 ### Implementation for User Story 1
 
-- [ ] T007 [P] [US1] Refactor src/components/AccountCard.tsx to use Card, CardContent, CardHeader, CardTitle from shadcn/ui
-- [ ] T008 [P] [US1] Add balance color coding to AccountCard using getBalanceState and balanceStateClasses utilities
-- [ ] T009 [P] [US1] Update AccountCard action buttons to use shadcn/ui Button (ghost variant with size="icon" for edit/delete)
-- [ ] T010 [US1] Refactor src/components/AccountList.tsx to use Card and Skeleton components for loading states
-- [ ] T011 [US1] Refactor src/routes/dashboard.tsx to use Card component for section containers
-- [ ] T012 [US1] Verify dashboard displays accounts with proper Card styling, balance colors, and skeleton loading
+- [X] T007 [P] [US1] Refactor src/components/AccountCard.tsx to use Card, CardContent, CardHeader, CardTitle from shadcn/ui
+- [X] T008 [P] [US1] Add balance color coding to AccountCard using getBalanceState and balanceStateClasses utilities
+- [X] T009 [P] [US1] Update AccountCard action buttons to use shadcn/ui Button (ghost variant with size="icon" for edit/delete)
+- [X] T010 [US1] Refactor src/components/AccountList.tsx to use Card and Skeleton components for loading states
+- [X] T011 [US1] Refactor src/routes/dashboard.tsx to use Card component for section containers
+- [X] T012 [US1] Verify dashboard displays accounts with proper Card styling, balance colors, and skeleton loading
 
 **Checkpoint**: User Story 1 complete - Dashboard displays polished account cards with color-coded balances
 
@@ -66,13 +66,13 @@
 
 ### Implementation for User Story 2
 
-- [ ] T013 [P] [US2] Refactor src/components/TransactionRow.tsx to use Card, Badge (with transactionStatusBadge styling), and Button components
-- [ ] T014 [P] [US2] Create src/components/DeleteTransactionDialog.tsx using AlertDialog component per contracts/component-interfaces.ts
-- [ ] T015 [US2] Refactor src/components/TransactionList.tsx to use Skeleton components and integrate DeleteTransactionDialog
-- [ ] T016 [US2] Refactor src/components/TransactionForm.tsx to use Input, Label, and Button components with proper spacing
-- [ ] T017 [US2] Add form validation error display to TransactionForm using Alert component with destructive variant
-- [ ] T018 [US2] Refactor src/routes/accounts/$accountId.tsx to use Card component for page layout and integrate dialog state management
-- [ ] T019 [US2] Verify transaction management: form submission, status toggle with Badge colors, delete with AlertDialog
+- [X] T013 [P] [US2] Refactor src/components/TransactionRow.tsx to use Card, Badge (with transactionStatusBadge styling), and Button components
+- [X] T014 [P] [US2] Create src/components/DeleteTransactionDialog.tsx using AlertDialog component per contracts/component-interfaces.ts
+- [X] T015 [US2] Refactor src/components/TransactionList.tsx to use Skeleton components and integrate DeleteTransactionDialog
+- [X] T016 [US2] Refactor src/components/TransactionForm.tsx to use Input, Label, and Button components with proper spacing
+- [X] T017 [US2] Add form validation error display to TransactionForm using Alert component with destructive variant
+- [X] T018 [US2] Refactor src/routes/accounts/$accountId.tsx to use Card component for page layout and integrate dialog state management
+- [X] T019 [US2] Verify transaction management: form submission, status toggle with Badge colors, delete with AlertDialog
 
 **Checkpoint**: User Story 2 complete - Transaction CRUD works with polished forms and dialogs
 
@@ -86,13 +86,13 @@
 
 ### Implementation for User Story 3
 
-- [ ] T020 [P] [US3] Refactor src/components/CreateAccountForm.tsx to use Input, Label, and Button components
-- [ ] T021 [P] [US3] Add form validation error display to CreateAccountForm using Alert component
-- [ ] T022 [US3] Refactor src/components/EditAccountDialog.tsx to use Dialog, Input, Label, Button per contracts (controlled open state pattern)
-- [ ] T023 [US3] Add form validation error display to EditAccountDialog using Alert component
-- [ ] T024 [US3] Refactor src/components/DeleteAccountDialog.tsx to use AlertDialog per contracts (controlled open state pattern)
-- [ ] T025 [US3] Update src/routes/dashboard.tsx to use new controlled dialog prop patterns for EditAccountDialog and DeleteAccountDialog
-- [ ] T026 [US3] Verify account management: create form, edit dialog, delete confirmation all work correctly
+- [X] T020 [P] [US3] Refactor src/components/CreateAccountForm.tsx to use Input, Label, and Button components
+- [X] T021 [P] [US3] Add form validation error display to CreateAccountForm using Alert component
+- [X] T022 [US3] Refactor src/components/EditAccountDialog.tsx to use Dialog, Input, Label, Button per contracts (controlled open state pattern)
+- [X] T023 [US3] Add form validation error display to EditAccountDialog using Alert component
+- [X] T024 [US3] Refactor src/components/DeleteAccountDialog.tsx to use AlertDialog per contracts (controlled open state pattern)
+- [X] T025 [US3] Update src/routes/dashboard.tsx to use new controlled dialog prop patterns for EditAccountDialog and DeleteAccountDialog
+- [X] T026 [US3] Verify account management: create form, edit dialog, delete confirmation all work correctly
 
 **Checkpoint**: User Story 3 complete - Account CRUD uses consistent modal dialogs
 
@@ -106,13 +106,13 @@
 
 ### Implementation for User Story 4
 
-- [ ] T027 [P] [US4] Refactor src/routes/login.tsx form container to use Card, CardContent, CardHeader, CardTitle components
-- [ ] T028 [US4] Refactor login form inputs to use Input and Label components with proper grid spacing
-- [ ] T029 [US4] Refactor login form buttons to use Button component (default variant for submit, outline for Google)
-- [ ] T030 [US4] Add error display using Alert component with AlertCircle icon and destructive variant
-- [ ] T031 [US4] Add Separator component between email/password form and Google OAuth button
-- [ ] T032 [US4] Add Spinner component to submit button for loading state
-- [ ] T033 [US4] Verify login page: centered Card layout, styled inputs, error alerts, loading spinner
+- [X] T027 [P] [US4] Refactor src/routes/login.tsx form container to use Card, CardContent, CardHeader, CardTitle components
+- [X] T028 [US4] Refactor login form inputs to use Input and Label components with proper grid spacing
+- [X] T029 [US4] Refactor login form buttons to use Button component (default variant for submit, outline for Google)
+- [X] T030 [US4] Add error display using Alert component with AlertCircle icon and destructive variant
+- [X] T031 [US4] Add Separator component between email/password form and Google OAuth button
+- [X] T032 [US4] Add Spinner component to submit button for loading state
+- [X] T033 [US4] Verify login page: centered Card layout, styled inputs, error alerts, loading spinner
 
 **Checkpoint**: User Story 4 complete - Login page provides professional first impression
 
@@ -122,12 +122,12 @@
 
 **Purpose**: Final verification and cross-cutting improvements
 
-- [ ] T034 Verify dark mode works correctly on all pages (toggle system preference)
-- [ ] T035 Verify responsive layout on viewport widths 320px to 1920px
-- [ ] T036 [P] Run `npm run lint` and fix any linting errors
-- [ ] T037 [P] Run `npm run build` and verify production build succeeds
-- [ ] T038 Run quickstart.md validation checklist
-- [ ] T039 Final manual testing: complete user journey through all 4 user stories
+- [X] T034 Verify dark mode works correctly on all pages (toggle system preference)
+- [X] T035 Verify responsive layout on viewport widths 320px to 1920px
+- [X] T036 [P] Run `npm run lint` and fix any linting errors
+- [X] T037 [P] Run `npm run build` and verify production build succeeds
+- [X] T038 Run quickstart.md validation checklist
+- [X] T039 Final manual testing: complete user journey through all 4 user stories
 
 ---
 

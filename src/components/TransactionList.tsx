@@ -1,8 +1,14 @@
+import { useState } from "react";
+
 import type { FamilienkasseTransaction } from "@/db/schema";
+
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { DeleteTransactionDialog } from "./DeleteTransactionDialog";
 import { TransactionRow } from "./TransactionRow";
 
 interface TransactionListProps {
-  transactions: FamilienkasseTransaction[];
+  transactions: Array<FamilienkasseTransaction>;
   isLoading?: boolean;
   onUpdate: () => void;
 }
@@ -12,22 +18,46 @@ export function TransactionList({
   isLoading,
   onUpdate,
 }: TransactionListProps) {
+  const [deletingTransaction, setDeletingTransaction] =
+    useState<FamilienkasseTransaction | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDeleteConfirm = async () => {
+    if (!deletingTransaction) return;
+
+    setIsDeleting(true);
+    try {
+      const response = await fetch(
+        `/api/accounts/${deletingTransaction.accountId}/transactions/${deletingTransaction.id}`,
+        { method: "DELETE" }
+      );
+
+      if (response.ok) {
+        setDeletingTransaction(null);
+        onUpdate();
+      }
+    } catch (error) {
+      console.error("Failed to delete transaction:", error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="space-y-2">
         {[1, 2, 3].map((i) => (
-          <div
-            key={i}
-            className="border border-neutral-200 dark:border-neutral-800 p-4 animate-pulse"
-          >
-            <div className="flex items-center justify-between">
-              <div className="space-y-2">
-                <div className="h-4 w-32 bg-neutral-200 dark:bg-neutral-800 rounded" />
-                <div className="h-3 w-24 bg-neutral-200 dark:bg-neutral-800 rounded" />
+          <Card key={i}>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-2">
+                  <Skeleton className="h-5 w-32" />
+                  <Skeleton className="h-3 w-24" />
+                </div>
+                <Skeleton className="h-5 w-12" />
               </div>
-              <div className="h-5 w-20 bg-neutral-200 dark:bg-neutral-800 rounded" />
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
     );
@@ -35,23 +65,36 @@ export function TransactionList({
 
   if (transactions.length === 0) {
     return (
-      <div className="border border-dashed border-neutral-300 dark:border-neutral-700 p-8 text-center">
-        <p className="text-neutral-500 dark:text-neutral-400">
-          No transactions yet. Add your first transaction to get started.
-        </p>
-      </div>
+      <Card className="border-dashed">
+        <CardContent className="p-8 text-center">
+          <p className="text-muted-foreground">
+            No transactions yet. Add your first transaction to get started.
+          </p>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div className="space-y-2">
-      {transactions.map((transaction) => (
-        <TransactionRow
-          key={transaction.id}
-          transaction={transaction}
-          onUpdate={onUpdate}
-        />
-      ))}
-    </div>
+    <>
+      <div className="space-y-2">
+        {transactions.map((transaction) => (
+          <TransactionRow
+            key={transaction.id}
+            transaction={transaction}
+            onUpdate={onUpdate}
+            onDeleteRequest={setDeletingTransaction}
+          />
+        ))}
+      </div>
+
+      <DeleteTransactionDialog
+        transaction={deletingTransaction}
+        open={!!deletingTransaction}
+        onOpenChange={(open) => !open && setDeletingTransaction(null)}
+        onConfirm={handleDeleteConfirm}
+        isDeleting={isDeleting}
+      />
+    </>
   );
 }
