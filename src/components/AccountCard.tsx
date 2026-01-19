@@ -28,68 +28,69 @@ export function AccountCard({
   return (
     <Card className="transition-colors">
       <CardContent className="p-4">
-        <div className="flex items-center justify-between gap-4">
+        {/* Header row: Account name and action buttons */}
+        <div className="flex items-center justify-between gap-2 mb-2">
           <Link
             to="/accounts/$accountId"
             params={{ accountId: account.id }}
             className="flex-1 min-w-0 hover:underline"
           >
-            <h3 className="font-medium truncate">{account.name}</h3>
+            <h3 className="text-lg font-semibold truncate">{account.name}</h3>
           </Link>
 
-          <div className="flex items-center gap-3">
-            <div className="text-right">
-              <span
-                className={cn(
-                  "text-lg font-semibold tabular-nums",
-                  balanceStateClasses[balanceState]
-                )}
-              >
-                {formatCurrency(account.paidBalance)}
-              </span>
-              {hasUnpaidDifference && (
-                <span className="text-sm text-muted-foreground ml-2 tabular-nums">
-                  (Soll: {formatCurrency(account.balance)})
-                </span>
+          {(onEdit || onDelete) && (
+            <div className="flex items-center gap-0.5">
+              {onEdit && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-10 w-10"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onEdit(account);
+                  }}
+                  title="Konto bearbeiten"
+                >
+                  <Pencil className="h-5 w-5" />
+                </Button>
+              )}
+              {onDelete && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-10 w-10 hover:text-destructive"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete(account);
+                  }}
+                  title="Konto löschen"
+                >
+                  <Trash2 className="h-5 w-5" />
+                </Button>
               )}
             </div>
+          )}
+        </div>
 
-            {(onEdit || onDelete) && (
-              <div className="flex items-center gap-1">
-                {onEdit && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onEdit(account);
-                    }}
-                    title="Konto bearbeiten"
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                )}
-                {onDelete && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDelete(account);
-                    }}
-                    className="hover:text-destructive"
-                    title="Konto löschen"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
+        {/* Balance row */}
+        <div className="flex items-baseline gap-2">
+          <span
+            className={cn(
+              "text-2xl font-bold tabular-nums",
+              balanceStateClasses[balanceState]
             )}
-          </div>
+          >
+            {formatCurrency(account.paidBalance)}
+          </span>
+          {hasUnpaidDifference && (
+            <span className="text-sm text-muted-foreground tabular-nums">
+              (Soll: {formatCurrency(account.balance)})
+            </span>
+          )}
         </div>
 
         {hasUnpaidTransactions && (
-          <div className="mt-3 pt-3 border-t">
+          <div className="mt-4 pt-3 border-t">
             <p className="text-xs text-muted-foreground mb-2">
               Offene Transaktionen ({account.unpaidTransactions.length})
             </p>

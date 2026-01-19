@@ -77,7 +77,7 @@ function AccountDetail() {
 
   if (accountLoading) {
     return (
-      <div className="flex justify-center py-10 px-4">
+      <div className="flex justify-center py-4 sm:py-10 px-4">
         <div className="w-full max-w-2xl space-y-4">
           <Skeleton className="h-5 w-36" />
           <Skeleton className="h-8 w-48" />
@@ -89,7 +89,7 @@ function AccountDetail() {
 
   if (accountError || !account) {
     return (
-      <div className="flex justify-center py-10 px-4">
+      <div className="flex justify-center py-4 sm:py-10 px-4">
         <div className="w-full max-w-2xl space-y-4">
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
@@ -111,8 +111,8 @@ function AccountDetail() {
   const balanceState = getBalanceState(account.balance);
 
   return (
-    <div className="flex justify-center py-10 px-4">
-      <div className="w-full max-w-2xl space-y-6">
+    <div className="flex justify-center py-4 sm:py-10 px-4">
+      <div className="w-full max-w-2xl space-y-4 sm:space-y-6">
         <div>
           <Button variant="ghost" size="sm" asChild>
             <Link to="/dashboard">

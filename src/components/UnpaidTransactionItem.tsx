@@ -47,14 +47,14 @@ export function UnpaidTransactionItem({
   };
 
   return (
-    <div className="flex items-center justify-between gap-2 py-2 px-3 hover:bg-muted/50 rounded-md transition-colors">
-      <div className="flex items-center gap-2 min-w-0 flex-1">
-        <span className="text-xs text-muted-foreground tabular-nums">
+    <div className="flex items-center justify-between gap-3 py-2.5 px-3 hover:bg-muted/50 rounded-md transition-colors min-h-[44px]">
+      <div className="flex items-center gap-2.5 min-w-0 flex-1">
+        <span className="text-sm text-muted-foreground tabular-nums shrink-0">
           {formattedDate}
         </span>
         <span
           className={cn(
-            "font-medium tabular-nums",
+            "text-base font-medium tabular-nums shrink-0",
             isNegative
               ? "text-red-600 dark:text-red-400"
               : "text-green-600 dark:text-green-400"
@@ -71,7 +71,7 @@ export function UnpaidTransactionItem({
       <Badge
         variant="outline"
         className={cn(
-          "cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors",
+          "cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors px-3 py-1.5 text-sm shrink-0",
           isUpdating && "opacity-50 pointer-events-none"
         )}
         onClick={handleMarkPaid}

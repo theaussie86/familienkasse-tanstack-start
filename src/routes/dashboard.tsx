@@ -67,8 +67,8 @@ function Dashboard() {
   };
 
   return (
-    <div className="flex justify-center py-10 px-4">
-      <div className="w-full max-w-2xl space-y-6">
+    <div className="flex justify-center py-4 sm:py-10 px-4">
+      <div className="w-full max-w-2xl space-y-4 sm:space-y-6">
         <div className="space-y-1.5">
           <h1 className="text-2xl font-semibold leading-none tracking-tight">
             Familienkasse
