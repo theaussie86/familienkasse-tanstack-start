@@ -14,7 +14,7 @@ export default function BetterAuthHeader() {
     return (
       <div className="flex items-center gap-2">
         {session.user.image ? (
-          <img src={session.user.image} alt="" className="h-8 w-8 rounded-full" />
+          <img src={session.user.image} alt="" className="h-8 w-8 rounded-full" referrerPolicy="no-referrer" />
         ) : (
           <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
             <span className="text-xs font-medium text-muted-foreground">
@@ -25,7 +25,7 @@ export default function BetterAuthHeader() {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => authClient.signOut()}
+          onClick={() => authClient.signOut({ fetchOptions: { onSuccess: () => { window.location.href = '/login' } } })}
         >
           Abmelden
         </Button>
