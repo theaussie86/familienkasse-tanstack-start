@@ -1,15 +1,21 @@
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, and } from "drizzle-orm";
 import { db } from "@/db";
 import {
   familienkasseAccount,
   familienkasseTransaction,
   type FamilienkasseAccount,
-  type NewFamilienkasseAccount,
+  type UpdateFamilienkasseAccount,
 } from "@/db/schema";
 import { generateId } from "@/lib/id";
 
 export interface AccountWithBalance extends FamilienkasseAccount {
   balance: number;
+}
+
+export interface UpdateAccountInput {
+  name?: string;
+  recurringAllowanceEnabled?: boolean;
+  recurringAllowanceAmount?: number;
 }
 
 /**
@@ -24,6 +30,8 @@ export async function getAccountsWithBalances(
       id: familienkasseAccount.id,
       name: familienkasseAccount.name,
       userId: familienkasseAccount.userId,
+      recurringAllowanceEnabled: familienkasseAccount.recurringAllowanceEnabled,
+      recurringAllowanceAmount: familienkasseAccount.recurringAllowanceAmount,
       createdAt: familienkasseAccount.createdAt,
       updatedAt: familienkasseAccount.updatedAt,
       balance:
@@ -59,6 +67,8 @@ export async function getAccountWithBalance(
       id: familienkasseAccount.id,
       name: familienkasseAccount.name,
       userId: familienkasseAccount.userId,
+      recurringAllowanceEnabled: familienkasseAccount.recurringAllowanceEnabled,
+      recurringAllowanceAmount: familienkasseAccount.recurringAllowanceAmount,
       createdAt: familienkasseAccount.createdAt,
       updatedAt: familienkasseAccount.updatedAt,
       balance:
@@ -107,23 +117,48 @@ export async function createAccount(
 }
 
 /**
- * Update an account's name.
+ * Update an account's fields including recurring allowance configuration.
  * Returns null if account doesn't exist or doesn't belong to the user.
  */
 export async function updateAccount(
   accountId: string,
   userId: string,
-  name: string
+  updates: UpdateAccountInput
 ): Promise<FamilienkasseAccount | null> {
-  const [account] = await db
-    .update(familienkasseAccount)
-    .set({ name })
-    .where(eq(familienkasseAccount.id, accountId))
-    .returning();
+  // First verify ownership
+  const [existing] = await db
+    .select({ userId: familienkasseAccount.userId })
+    .from(familienkasseAccount)
+    .where(eq(familienkasseAccount.id, accountId));
 
-  if (!account || account.userId !== userId) {
+  if (!existing || existing.userId !== userId) {
     return null;
   }
+
+  // Build update object with only provided fields
+  const updateData: UpdateFamilienkasseAccount = {};
+  if (updates.name !== undefined) updateData.name = updates.name;
+  if (updates.recurringAllowanceEnabled !== undefined) {
+    updateData.recurringAllowanceEnabled = updates.recurringAllowanceEnabled;
+  }
+  if (updates.recurringAllowanceAmount !== undefined) {
+    updateData.recurringAllowanceAmount = updates.recurringAllowanceAmount;
+  }
+
+  if (Object.keys(updateData).length === 0) {
+    // No updates provided, return current account
+    const [account] = await db
+      .select()
+      .from(familienkasseAccount)
+      .where(eq(familienkasseAccount.id, accountId));
+    return account;
+  }
+
+  const [account] = await db
+    .update(familienkasseAccount)
+    .set(updateData)
+    .where(eq(familienkasseAccount.id, accountId))
+    .returning();
 
   return account;
 }
@@ -151,4 +186,22 @@ export async function deleteAccount(
     .where(eq(familienkasseAccount.id, accountId));
 
   return true;
+}
+
+/**
+ * Get all accounts with recurring allowance enabled and amount > 0.
+ * Used by the weekly allowance cron job.
+ */
+export async function getAccountsWithAllowanceEnabled(): Promise<FamilienkasseAccount[]> {
+  const accounts = await db
+    .select()
+    .from(familienkasseAccount)
+    .where(
+      and(
+        eq(familienkasseAccount.recurringAllowanceEnabled, true),
+        sql`${familienkasseAccount.recurringAllowanceAmount} > 0`
+      )
+    );
+
+  return accounts;
 }

@@ -1,4 +1,4 @@
-import { eq, desc, sql, and } from "drizzle-orm";
+import { eq, desc, sql, and, like, gte } from "drizzle-orm";
 import { db } from "@/db";
 import {
   familienkasseTransaction,
@@ -181,4 +181,63 @@ export async function deleteTransaction(
     .where(eq(familienkasseTransaction.id, transactionId));
 
   return true;
+}
+
+/**
+ * Get the start of the current week (Sunday at midnight).
+ */
+function getStartOfCurrentWeek(): Date {
+  const now = new Date();
+  const day = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
+  const diff = now.getDate() - day;
+  const startOfWeek = new Date(now);
+  startOfWeek.setDate(diff);
+  startOfWeek.setHours(0, 0, 0, 0);
+  return startOfWeek;
+}
+
+/**
+ * Check if an account already has a weekly allowance transaction for the current week.
+ * Used for duplicate prevention in the cron job.
+ */
+export async function hasWeeklyAllowanceThisWeek(accountId: string): Promise<boolean> {
+  const startOfWeek = getStartOfCurrentWeek();
+
+  const [existing] = await db
+    .select({ id: familienkasseTransaction.id })
+    .from(familienkasseTransaction)
+    .where(
+      and(
+        eq(familienkasseTransaction.accountId, accountId),
+        like(familienkasseTransaction.description, "Weekly Allowance%"),
+        gte(familienkasseTransaction.createdAt, startOfWeek)
+      )
+    )
+    .limit(1);
+
+  return !!existing;
+}
+
+/**
+ * Create a weekly allowance transaction for an account.
+ * Does not check for duplicates - caller should use hasWeeklyAllowanceThisWeek first.
+ */
+export async function createAllowanceTransaction(
+  accountId: string,
+  amount: number
+): Promise<FamilienkasseTransaction> {
+  const id = generateId();
+
+  const [transaction] = await db
+    .insert(familienkasseTransaction)
+    .values({
+      id,
+      accountId,
+      description: "Weekly Allowance",
+      amount,
+      isPaid: true, // Allowances are immediately available
+    })
+    .returning();
+
+  return transaction;
 }

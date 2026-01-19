@@ -15,6 +15,13 @@
       "when": 1768804292270,
       "tag": "0001_right_ken_ellis",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1768807861827,
+      "tag": "0002_confused_scalphunter",
+      "breakpoints": true
     }
   ]
 }

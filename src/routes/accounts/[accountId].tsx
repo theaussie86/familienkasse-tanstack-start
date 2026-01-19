@@ -128,6 +128,11 @@ function AccountDetail() {
           >
             {formatCurrency(account.balance)}
           </p>
+          {account.recurringAllowanceEnabled && account.recurringAllowanceAmount > 0 && (
+            <p className="text-sm text-neutral-500 dark:text-neutral-400">
+              Weekly allowance: {formatCurrency(account.recurringAllowanceAmount)}
+            </p>
+          )}
         </div>
 
         <div className="space-y-4">

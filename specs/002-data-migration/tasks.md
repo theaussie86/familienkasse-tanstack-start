@@ -19,13 +19,13 @@
 
 **Purpose**: Environment configuration and schema preparation
 
-- [ ] T001 Add `SUPABASE_DATABASE_URL` to `.env.example` with documentation comments
-- [ ] T002 [P] Create Supabase client connection module in `src/lib/supabase-client.ts`
-- [ ] T003 [P] Extend `familienkasse_account` schema with `recurring_allowance_enabled` and `recurring_allowance_amount` fields in `src/db/schema.ts`
-- [ ] T004 [P] Add `migration_log` table schema in `src/db/schema.ts`
-- [ ] T005 Generate database migration with `npm run db:generate`
-- [ ] T006 Apply database migration with `npm run db:migrate`
-- [ ] T007 Export new types (`MigrationLog`, `AllowanceConfig`) in `src/db/schema.ts`
+- [X] T001 Add `SUPABASE_DATABASE_URL` to `.env.example` with documentation comments
+- [X] T002 [P] Create Supabase client connection module in `src/lib/supabase-client.ts`
+- [X] T003 [P] Extend `familienkasse_account` schema with `recurring_allowance_enabled` and `recurring_allowance_amount` fields in `src/db/schema.ts`
+- [X] T004 [P] Add `migration_log` table schema in `src/db/schema.ts`
+- [X] T005 Generate database migration with `npm run db:generate`
+- [X] T006 Apply database migration with `npm run db:migrate`
+- [X] T007 Export new types (`MigrationLog`, `AllowanceConfig`) in `src/db/schema.ts`
 
 ---
 
@@ -35,10 +35,10 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T008 Add Zod validation schemas for recurring allowance fields in `src/lib/validations.ts`
-- [ ] T009 [P] Create migration log query functions (`createLog`, `updateLog`, `getLatestLog`) in `src/db/queries/migration-log.ts`
-- [ ] T010 [P] Extend account query functions with recurring allowance field handling in `src/db/queries/accounts.ts`
-- [ ] T011 Enable Nitro experimental tasks feature in `vite.config.ts` with `experimental: { tasks: true }`
+- [X] T008 Add Zod validation schemas for recurring allowance fields in `src/lib/validations.ts`
+- [X] T009 [P] Create migration log query functions (`createLog`, `updateLog`, `getLatestLog`) in `src/db/queries/migration-log.ts`
+- [X] T010 [P] Extend account query functions with recurring allowance field handling in `src/db/queries/accounts.ts`
+- [X] T011 Enable Nitro experimental tasks feature in `vite.config.ts` with `experimental: { tasks: true }`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -52,13 +52,13 @@
 
 ### Implementation for User Story 1
 
-- [ ] T012 [US1] Define source database Drizzle schema (read-only) for Supabase tables in `src/db/migrations/supabase-schema.ts`
-- [ ] T013 [US1] Implement account migration function with `onConflictDoNothing()` pattern in `src/db/migrations/supabase-migration.ts`
-- [ ] T014 [US1] Implement transaction migration function with `onConflictDoNothing()` pattern in `src/db/migrations/supabase-migration.ts`
-- [ ] T015 [US1] Implement balance validation function (sum of transactions = account balance) in `src/db/migrations/supabase-migration.ts`
-- [ ] T016 [US1] Implement migration orchestrator with logging to `migration_log` table in `src/db/migrations/supabase-migration.ts`
-- [ ] T017 [US1] Create CLI entry point script in `src/scripts/migrate-from-supabase.ts`
-- [ ] T018 [US1] Add error handling for Supabase connection failures with clear error messages in `src/scripts/migrate-from-supabase.ts`
+- [X] T012 [US1] Define source database Drizzle schema (read-only) for Supabase tables in `src/db/migrations/supabase-schema.ts`
+- [X] T013 [US1] Implement account migration function with `onConflictDoNothing()` pattern in `src/db/migrations/supabase-migration.ts`
+- [X] T014 [US1] Implement transaction migration function with `onConflictDoNothing()` pattern in `src/db/migrations/supabase-migration.ts`
+- [X] T015 [US1] Implement balance validation function (sum of transactions = account balance) in `src/db/migrations/supabase-migration.ts`
+- [X] T016 [US1] Implement migration orchestrator with logging to `migration_log` table in `src/db/migrations/supabase-migration.ts`
+- [X] T017 [US1] Create CLI entry point script in `src/scripts/migrate-from-supabase.ts`
+- [X] T018 [US1] Add error handling for Supabase connection failures with clear error messages in `src/scripts/migrate-from-supabase.ts`
 
 **Checkpoint**: Migration script complete - can migrate data from Supabase to local database idempotently
 
@@ -72,12 +72,12 @@
 
 ### Implementation for User Story 2
 
-- [ ] T019 [P] [US2] Create `AllowanceConfigForm` component with toggle and amount input in `src/components/AllowanceConfigForm.tsx`
-- [ ] T020 [P] [US2] Update `updateAccount` query to handle recurring allowance fields in `src/db/queries/accounts.ts`
-- [ ] T021 [US2] Extend `EditAccountDialog` to include `AllowanceConfigForm` in `src/components/EditAccountDialog.tsx`
-- [ ] T022 [US2] Update account PATCH API route to accept recurring allowance fields in `src/routes/api/accounts/[accountId]/index.ts`
-- [ ] T023 [US2] Display current recurring allowance configuration in account detail view in `src/routes/accounts/[accountId].tsx`
-- [ ] T024 [US2] Add currency formatting for allowance amount display using `formatCurrency()` from `@/lib/currency`
+- [X] T019 [P] [US2] Create `AllowanceConfigForm` component with toggle and amount input in `src/components/AllowanceConfigForm.tsx`
+- [X] T020 [P] [US2] Update `updateAccount` query to handle recurring allowance fields in `src/db/queries/accounts.ts`
+- [X] T021 [US2] Extend `EditAccountDialog` to include `AllowanceConfigForm` in `src/components/EditAccountDialog.tsx`
+- [X] T022 [US2] Update account PATCH API route to accept recurring allowance fields in `src/routes/api/accounts/[accountId]/index.ts`
+- [X] T023 [US2] Display current recurring allowance configuration in account detail view in `src/routes/accounts/[accountId].tsx`
+- [X] T024 [US2] Add currency formatting for allowance amount display using `formatCurrency()` from `@/lib/currency`
 
 **Checkpoint**: Account configuration complete - users can enable and configure weekly allowances per account
 
@@ -91,13 +91,13 @@
 
 ### Implementation for User Story 3
 
-- [ ] T025 [US3] Create `getAccountsWithAllowanceEnabled` query function in `src/db/queries/accounts.ts`
-- [ ] T026 [US3] Implement duplicate detection logic (check for "Weekly Allowance" transaction in current week) in `src/db/queries/transactions.ts`
-- [ ] T027 [US3] Create `createAllowanceTransaction` function with proper description format in `src/db/queries/transactions.ts`
-- [ ] T028 [US3] Implement weekly allowance Nitro task at `src/tasks/allowance/weekly.ts`
-- [ ] T029 [US3] Add scheduled task configuration to Nitro config in `vite.config.ts` with cron pattern `"0 0 * * 0"`
-- [ ] T030 [US3] Create manual trigger API endpoint for testing at `src/routes/api/cron/weekly-allowance.ts`
-- [ ] T031 [US3] Add execution logging for cron job runs with success/failure counts
+- [X] T025 [US3] Create `getAccountsWithAllowanceEnabled` query function in `src/db/queries/accounts.ts`
+- [X] T026 [US3] Implement duplicate detection logic (check for "Weekly Allowance" transaction in current week) in `src/db/queries/transactions.ts`
+- [X] T027 [US3] Create `createAllowanceTransaction` function with proper description format in `src/db/queries/transactions.ts`
+- [X] T028 [US3] Implement weekly allowance Nitro task at `src/tasks/allowance/weekly.ts`
+- [X] T029 [US3] Add scheduled task configuration to Nitro config in `vite.config.ts` with cron pattern `"0 0 * * 0"`
+- [X] T030 [US3] Create manual trigger API endpoint for testing at `src/routes/api/cron/weekly-allowance.ts`
+- [X] T031 [US3] Add execution logging for cron job runs with success/failure counts
 
 **Checkpoint**: Cron job complete - weekly allowances are automatically processed for all configured accounts
 
@@ -107,11 +107,11 @@
 
 **Purpose**: Validation and cleanup
 
-- [ ] T032 [P] Run migration script in development environment and verify quickstart.md steps
-- [ ] T033 [P] Verify account balance matches sum of transactions after migration
-- [ ] T034 Test manual cron trigger API endpoint and verify duplicate prevention
-- [ ] T035 Verify all existing functionality (CRUD accounts, transactions) still works after schema changes
-- [ ] T036 [P] Clean up any console.log statements, ensure proper logging throughout
+- [X] T032 [P] Run migration script in development environment and verify quickstart.md steps
+- [X] T033 [P] Verify account balance matches sum of transactions after migration
+- [X] T034 Test weekly allowance function and verify duplicate prevention
+- [X] T035 Verify all existing functionality (CRUD accounts, transactions) still works after schema changes
+- [X] T036 [P] Clean up any console.log statements, ensure proper logging throughout
 
 ---
 

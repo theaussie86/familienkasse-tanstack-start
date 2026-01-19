@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import type { AccountWithBalance } from "@/db/queries/accounts";
+import type { AllowanceConfig } from "@/db/schema";
+import { AllowanceConfigForm } from "./AllowanceConfigForm";
 
 interface EditAccountDialogProps {
   account: AccountWithBalance;
@@ -13,12 +15,20 @@ export function EditAccountDialog({
   onClose,
 }: EditAccountDialogProps) {
   const [name, setName] = useState(account.name);
+  const [allowanceConfig, setAllowanceConfig] = useState<AllowanceConfig>({
+    recurringAllowanceEnabled: account.recurringAllowanceEnabled,
+    recurringAllowanceAmount: account.recurringAllowanceAmount,
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setName(account.name);
-  }, [account.name]);
+    setAllowanceConfig({
+      recurringAllowanceEnabled: account.recurringAllowanceEnabled,
+      recurringAllowanceAmount: account.recurringAllowanceAmount,
+    });
+  }, [account.name, account.recurringAllowanceEnabled, account.recurringAllowanceAmount]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +39,14 @@ export function EditAccountDialog({
       return;
     }
 
-    if (name.trim() === account.name) {
+    // Check if anything changed
+    const nameChanged = name.trim() !== account.name;
+    const allowanceEnabledChanged =
+      allowanceConfig.recurringAllowanceEnabled !== account.recurringAllowanceEnabled;
+    const allowanceAmountChanged =
+      allowanceConfig.recurringAllowanceAmount !== account.recurringAllowanceAmount;
+
+    if (!nameChanged && !allowanceEnabledChanged && !allowanceAmountChanged) {
       onClose();
       return;
     }
@@ -37,10 +54,21 @@ export function EditAccountDialog({
     setIsSubmitting(true);
 
     try {
+      const updatePayload: Record<string, unknown> = {};
+      if (nameChanged) {
+        updatePayload.name = name.trim();
+      }
+      if (allowanceEnabledChanged) {
+        updatePayload.recurringAllowanceEnabled = allowanceConfig.recurringAllowanceEnabled;
+      }
+      if (allowanceAmountChanged) {
+        updatePayload.recurringAllowanceAmount = allowanceConfig.recurringAllowanceAmount;
+      }
+
       const response = await fetch(`/api/accounts/${account.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim() }),
+        body: JSON.stringify(updatePayload),
       });
 
       if (!response.ok) {
@@ -90,6 +118,13 @@ export function EditAccountDialog({
               maxLength={100}
               required
               autoFocus
+            />
+          </div>
+
+          <div className="border-t border-neutral-200 dark:border-neutral-800 pt-4">
+            <AllowanceConfigForm
+              config={allowanceConfig}
+              onChange={setAllowanceConfig}
             />
           </div>
 

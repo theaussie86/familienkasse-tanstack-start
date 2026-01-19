@@ -62,7 +62,7 @@ export const APIRoute = createAPIFileRoute("/api/accounts/$accountId")({
       const account = await updateAccount(
         params.accountId,
         session.user.id,
-        parsed.data.name
+        parsed.data
       );
 
       if (!account) {

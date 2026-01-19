@@ -90,6 +90,12 @@ export const familienkasseAccount = pgTable(
     userId: text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
+    recurringAllowanceEnabled: boolean("recurring_allowance_enabled")
+      .notNull()
+      .default(false),
+    recurringAllowanceAmount: integer("recurring_allowance_amount")
+      .notNull()
+      .default(0),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
@@ -116,10 +122,36 @@ export const familienkasseTransaction = pgTable(
   ]
 );
 
+// Migration log table for tracking migration runs
+export const migrationLog = pgTable("migration_log", {
+  id: text("id").primaryKey(),
+  startedAt: timestamp("started_at").notNull(),
+  completedAt: timestamp("completed_at"),
+  status: text("status").notNull(), // 'running', 'completed', 'failed'
+  accountsMigrated: integer("accounts_migrated").notNull().default(0),
+  accountsSkipped: integer("accounts_skipped").notNull().default(0),
+  transactionsMigrated: integer("transactions_migrated").notNull().default(0),
+  transactionsSkipped: integer("transactions_skipped").notNull().default(0),
+  errorMessage: text("error_message"),
+});
+
 // Type exports for Familienkasse entities
 export type FamilienkasseAccount = typeof familienkasseAccount.$inferSelect;
 export type NewFamilienkasseAccount = typeof familienkasseAccount.$inferInsert;
+export type UpdateFamilienkasseAccount = Partial<
+  Omit<NewFamilienkasseAccount, "id" | "userId" | "createdAt">
+>;
 export type FamilienkasseTransaction =
   typeof familienkasseTransaction.$inferSelect;
 export type NewFamilienkasseTransaction =
   typeof familienkasseTransaction.$inferInsert;
+
+// Migration log types
+export type MigrationLog = typeof migrationLog.$inferSelect;
+export type NewMigrationLog = typeof migrationLog.$inferInsert;
+
+// Allowance configuration subset for UI
+export type AllowanceConfig = Pick<
+  FamilienkasseAccount,
+  "recurringAllowanceEnabled" | "recurringAllowanceAmount"
+>;
