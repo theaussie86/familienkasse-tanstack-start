@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { tanstackStartCookies } from "better-auth/tanstack-start";
+import { reactStartCookies } from "better-auth/react-start";
 import { db } from "@/db";
 
 /**
@@ -24,7 +24,7 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     },
   },
-  plugins: [tanstackStartCookies()],
+  plugins: [reactStartCookies()],
   advanced: {
     disabledPaths: isRegistrationAllowed() ? [] : ["/sign-up/email"],
   },
