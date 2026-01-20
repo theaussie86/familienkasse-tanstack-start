@@ -1,0 +1,40 @@
+# Local production simulation - mirrors production behavior
+# Use with: docker compose -f docker-compose.local.yml up -d --build
+# Database port is NOT exposed (internal only, like production)
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file: .env.local
+    environment:
+      - NODE_ENV=production
+      # Override localhost with postgres container hostname for inter-container communication
+      - DATABASE_URL=postgresql://familienkasse:your-secure-password-here@postgres:5432/familienkasse
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  postgres:
+    build: ./docker/postgres
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    env_file: .env.local
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  postgres_dev_data:

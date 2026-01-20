@@ -1,0 +1,55 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+.output/
+.nitro/
+.vinxi/
+.tanstack/
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment files (secrets)
+.env
+.env.*
+!.env.example
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+docker/
+
+# Testing and coverage
+coverage/
+*.test.ts
+*.spec.ts
+
+# Development files
+*.log
+*.tmp
+*.swp
+
+# Netlify
+.netlify/
+
+# Specification docs (not needed in container)
+specs/
+
+# Misc
+count.txt
+todos.json
+.auto-claude/
+.gemini/

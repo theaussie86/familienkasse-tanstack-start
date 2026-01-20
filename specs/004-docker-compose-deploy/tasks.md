@@ -19,9 +19,9 @@
 
 **Purpose**: Create the directory structure and shared configuration files
 
-- [ ] T001 Create docker/ directory structure at repository root
-- [ ] T002 [P] Create .dockerignore file at repository root
-- [ ] T003 [P] Create .env.example file with environment variable template at repository root
+- [x] T001 Create docker/ directory structure at repository root
+- [x] T002 [P] Create .dockerignore file at repository root
+- [x] T003 [P] Create .env.example file with environment variable template at repository root
 
 ---
 
@@ -31,8 +31,8 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T004 Create PostgreSQL Dockerfile with pg_cron extension at docker/postgres/Dockerfile
-- [ ] T005 Create init-extensions.sql script at docker/postgres/init-extensions.sql
+- [x] T004 Create PostgreSQL Dockerfile with pg_cron extension at docker/postgres/Dockerfile
+- [x] T005 Create init-extensions.sql script at docker/postgres/init-extensions.sql
 
 **Checkpoint**: Foundation ready - PostgreSQL container with pg_cron is buildable
 
@@ -46,13 +46,13 @@
 
 ### Implementation for User Story 1
 
-- [ ] T006 [US1] Create multi-stage Dockerfile for Node.js app at Dockerfile
-- [ ] T007 [US1] Create production docker-compose.yml at repository root
-- [ ] T008 [US1] Configure app container with health check and restart policy in docker-compose.yml
-- [ ] T009 [US1] Configure postgres container with health check and restart policy in docker-compose.yml
-- [ ] T010 [US1] Configure depends_on with service_healthy condition in docker-compose.yml
-- [ ] T011 [US1] Configure volume for PostgreSQL data persistence in docker-compose.yml
-- [ ] T012 [US1] Add entrypoint logic for running database migrations on app startup in Dockerfile
+- [x] T006 [US1] Create multi-stage Dockerfile for Node.js app at Dockerfile
+- [x] T007 [US1] Create production docker-compose.yml at repository root
+- [x] T008 [US1] Configure app container with health check and restart policy in docker-compose.yml
+- [x] T009 [US1] Configure postgres container with health check and restart policy in docker-compose.yml
+- [x] T010 [US1] Configure depends_on with service_healthy condition in docker-compose.yml
+- [x] T011 [US1] Configure volume for PostgreSQL data persistence in docker-compose.yml
+- [x] T012 [US1] Add entrypoint logic for running database migrations on app startup in Dockerfile
 
 **Checkpoint**: Production deployment works - `docker compose up -d` starts all services, health checks pass, app is accessible
 
@@ -66,9 +66,9 @@
 
 ### Implementation for User Story 2
 
-- [ ] T013 [US2] Add weekly_allowance cron job to init-extensions.sql at docker/postgres/init-extensions.sql
-- [ ] T014 [US2] Add purge_cron_history maintenance job to init-extensions.sql at docker/postgres/init-extensions.sql
-- [ ] T015 [US2] Configure pg_cron database settings in PostgreSQL Dockerfile at docker/postgres/Dockerfile
+- [x] T013 [US2] Add weekly_allowance cron job to init-extensions.sql at docker/postgres/init-extensions.sql
+- [x] T014 [US2] Add purge_cron_history maintenance job to init-extensions.sql at docker/postgres/init-extensions.sql
+- [x] T015 [US2] Configure pg_cron database settings in PostgreSQL Dockerfile at docker/postgres/Dockerfile
 
 **Checkpoint**: pg_cron jobs are scheduled and visible via `SELECT * FROM cron.job`
 
@@ -82,9 +82,9 @@
 
 ### Implementation for User Story 3
 
-- [ ] T016 [US3] Create docker-compose.dev.yml with PostgreSQL container only at repository root
-- [ ] T017 [US3] Expose port 5432 for local database access in docker-compose.dev.yml
-- [ ] T018 [US3] Configure same PostgreSQL image (with pg_cron) as production in docker-compose.dev.yml
+- [x] T016 [US3] Create docker-compose.dev.yml with PostgreSQL container only at repository root
+- [x] T017 [US3] Expose port 5432 for local database access in docker-compose.dev.yml
+- [x] T018 [US3] Configure same PostgreSQL image (with pg_cron) as production in docker-compose.dev.yml
 
 **Checkpoint**: Development workflow works - database container running, `npm run dev` connects and hot-reloads
 
@@ -98,9 +98,9 @@
 
 ### Implementation for User Story 4
 
-- [ ] T019 [US4] Create docker-compose.local.yml for local production simulation at repository root
-- [ ] T020 [US4] Configure separate volume name to avoid conflicts with dev database in docker-compose.local.yml
-- [ ] T021 [US4] Ensure database port is NOT exposed (internal only) in docker-compose.local.yml
+- [x] T019 [US4] Create docker-compose.local.yml for local production simulation at repository root
+- [x] T020 [US4] Configure separate volume name to avoid conflicts with dev database in docker-compose.local.yml
+- [x] T021 [US4] Ensure database port is NOT exposed (internal only) in docker-compose.local.yml
 
 **Checkpoint**: Local production simulation mirrors production behavior - only app port exposed, database internal only
 
@@ -110,8 +110,8 @@
 
 **Purpose**: Final validation and documentation alignment
 
-- [ ] T022 [P] Verify .env.example matches all required environment variables from contracts
-- [ ] T023 [P] Verify Dockerfile builds successfully with multi-stage build
+- [x] T022 [P] Verify .env.example matches all required environment variables from contracts
+- [x] T023 [P] Verify Dockerfile builds successfully with multi-stage build
 - [ ] T024 Run full production stack locally to validate quickstart.md commands
 - [ ] T025 Verify all health checks pass within success criteria timeframes (app 60s, healthy 90s)
 
