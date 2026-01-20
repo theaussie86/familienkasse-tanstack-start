@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as ApiConfigRouteImport } from './routes/api/config'
 import { Route as AccountsAccountIdRouteImport } from './routes/accounts/$accountId'
 import { Route as ApiAccountsIndexRouteImport } from './routes/api/accounts/index'
@@ -34,6 +35,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHealthRoute = ApiHealthRouteImport.update({
+  id: '/api/health',
+  path: '/api/health',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiConfigRoute = ApiConfigRouteImport.update({
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/accounts/$accountId': typeof AccountsAccountIdRoute
   '/api/config': typeof ApiConfigRoute
+  '/api/health': typeof ApiHealthRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/cron/weekly-allowance': typeof ApiCronWeeklyAllowanceRoute
   '/api/accounts/': typeof ApiAccountsIndexRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/accounts/$accountId': typeof AccountsAccountIdRoute
   '/api/config': typeof ApiConfigRoute
+  '/api/health': typeof ApiHealthRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/cron/weekly-allowance': typeof ApiCronWeeklyAllowanceRoute
   '/api/accounts': typeof ApiAccountsIndexRoute
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/accounts/$accountId': typeof AccountsAccountIdRoute
   '/api/config': typeof ApiConfigRoute
+  '/api/health': typeof ApiHealthRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/cron/weekly-allowance': typeof ApiCronWeeklyAllowanceRoute
   '/api/accounts/': typeof ApiAccountsIndexRoute
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/accounts/$accountId'
     | '/api/config'
+    | '/api/health'
     | '/api/auth/$'
     | '/api/cron/weekly-allowance'
     | '/api/accounts/'
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/accounts/$accountId'
     | '/api/config'
+    | '/api/health'
     | '/api/auth/$'
     | '/api/cron/weekly-allowance'
     | '/api/accounts'
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/accounts/$accountId'
     | '/api/config'
+    | '/api/health'
     | '/api/auth/$'
     | '/api/cron/weekly-allowance'
     | '/api/accounts/'
@@ -168,6 +180,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   AccountsAccountIdRoute: typeof AccountsAccountIdRoute
   ApiConfigRoute: typeof ApiConfigRoute
+  ApiHealthRoute: typeof ApiHealthRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiCronWeeklyAllowanceRoute: typeof ApiCronWeeklyAllowanceRoute
   ApiAccountsIndexRoute: typeof ApiAccountsIndexRoute
@@ -197,6 +210,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/health': {
+      id: '/api/health'
+      path: '/api/health'
+      fullPath: '/api/health'
+      preLoaderRoute: typeof ApiHealthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/config': {
@@ -264,6 +284,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   AccountsAccountIdRoute: AccountsAccountIdRoute,
   ApiConfigRoute: ApiConfigRoute,
+  ApiHealthRoute: ApiHealthRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiCronWeeklyAllowanceRoute: ApiCronWeeklyAllowanceRoute,
   ApiAccountsIndexRoute: ApiAccountsIndexRoute,
