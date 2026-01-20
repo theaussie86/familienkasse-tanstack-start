@@ -221,6 +221,8 @@ TanStack Router with file-based routing:
 - PostgreSQL (local target via Drizzle ORM, Supabase source via direct postgres connection) (002-data-migration)
 - TypeScript 5.7, React 19.2.0 + TanStack Start, TanStack Router 1.132, TanStack Query 5.66, shadcn/ui (new-york style), Tailwind CSS 4.0, Lucide Reac (003-frontend-redesign)
 - PostgreSQL via Drizzle ORM 0.45 (no changes needed) (003-frontend-redesign)
+- Node.js 22 LTS, TypeScript 5.7 + TanStack Start 1.132, Nitro (server runtime), Drizzle ORM 0.45, Vite 7 (004-docker-compose-deploy)
+- PostgreSQL 17 with pg_cron extension via Drizzle ORM (004-docker-compose-deploy)
 
 ## Recent Changes
 - 001-data-model: Added TypeScript 5.7, React 19.2.0 + TanStack Start, TanStack Router 1.132, TanStack Query 5.66, Better-Auth 1.4
