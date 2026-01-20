@@ -15,6 +15,8 @@ services:
       - GOOGLE_CLIENT_ID
       - GOOGLE_CLIENT_SECRET
       - ALLOW_REGISTRATION
+      - BETTER_AUTH_URL
+      - BETTER_AUTH_SECRET
       - NODE_ENV=production
     restart: unless-stopped
     healthcheck:
