@@ -8,6 +8,7 @@ GRANT USAGE ON SCHEMA cron TO familienkasse;
 -- Schedule weekly allowance job
 -- Runs every Monday at 10:00 AM server time
 -- Inserts allowance transactions for accounts with recurring allowance enabled
+-- Description format: [ACCOUNT_NAME] KW[WEEK], [YEAR]
 SELECT cron.schedule(
     'weekly_allowance',
     '0 10 * * 1',
@@ -16,7 +17,7 @@ SELECT cron.schedule(
     SELECT
         gen_random_uuid()::text,
         fa.id,
-        'Weekly allowance',
+        fa.name || ' KW' || EXTRACT(WEEK FROM NOW())::integer || ', ' || EXTRACT(YEAR FROM NOW())::integer,
         fa.recurring_allowance_amount,
         false,
         NOW()
