@@ -17,7 +17,6 @@ services:
       - ALLOW_REGISTRATION
       - BETTER_AUTH_URL
       - BETTER_AUTH_SECRET
-      - SUPABASE_DATABASE_URL
       - NODE_ENV=production
     restart: unless-stopped
     healthcheck:
