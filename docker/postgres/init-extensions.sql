@@ -6,12 +6,12 @@ CREATE EXTENSION IF NOT EXISTS pg_cron;
 GRANT USAGE ON SCHEMA cron TO familienkasse;
 
 -- Schedule weekly allowance job
--- Runs every Monday at 10:00 AM server time
+-- Runs every Saturday at 10:00 AM server time
 -- Inserts allowance transactions for accounts with recurring allowance enabled
 -- Description format: [ACCOUNT_NAME] KW[WEEK], [YEAR]
 SELECT cron.schedule(
     'weekly_allowance',
-    '0 10 * * 1',
+    '0 10 * * 6',
     $SQL$
     INSERT INTO familienkasse_transaction (id, account_id, description, amount, is_paid, created_at)
     SELECT
